@@ -13,6 +13,22 @@ class ActiveComponent extends Component {
     };
   }
 
+  // ✅ AUTO ACTIVE FROM EMAIL LINK
+  componentDidMount() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const token = params.get("token");
+
+    if (id && token) {
+      this.setState({
+        txtID: id,
+        txtToken: token
+      }, () => {
+        this.btnActiveClick(new Event("submit"));
+      });
+    }
+  }
+
   handleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
@@ -20,9 +36,8 @@ class ActiveComponent extends Component {
   };
 
   btnActiveClick = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
-    // ✅ Validate trước khi gửi
     if (!this.state.txtID || !this.state.txtToken) {
       this.setState({ message: "Invalid input" });
       return;
@@ -36,9 +51,6 @@ class ActiveComponent extends Component {
     axios.post("http://localhost:3001/api/customer/active", account)
 
       .then((res) => {
-
-        // ✅ FIX CHỖ QUAN TRỌNG
-        // backend thường trả { success: true/false }
         if (res.data && res.data.success === true) {
           this.setState({
             message: "Activation success"
@@ -48,7 +60,6 @@ class ActiveComponent extends Component {
             message: "Invalid ID or token"
           });
         }
-
       })
 
       .catch(() => {

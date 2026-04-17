@@ -24,8 +24,8 @@ const CustomerDAO = {
       console.log("ACTIVE INPUT:", _id, token);
 
       const query = {
-        _id: _id,                 // 🔥 KHÔNG ép ObjectId
-        token: token + ''        // 🔥 ép về string
+        _id: new mongoose.Types.ObjectId(_id), // ✅ FIX
+        token: token
       };
 
       const update = {

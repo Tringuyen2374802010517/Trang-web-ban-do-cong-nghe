@@ -26,8 +26,6 @@ router.get('/categories', async (req, res) => {
 
 
 // ================= PRODUCTS =================
-
-// 🔥 GET ALL PRODUCTS (FIX 404)
 router.get('/products', async (req, res) => {
   try {
     const products = await ProductDAO.selectAll();
@@ -112,7 +110,9 @@ router.post('/signup', async (req, res) => {
 
     res.json({
       success: !!result,
-      message: result ? 'Signup success' : 'Insert failure',
+      message: result
+        ? 'Signup success! Please check your email to activate your account.' // ✅ FIX
+        : 'Insert failure',
       id: result?._id,
       token
     });
