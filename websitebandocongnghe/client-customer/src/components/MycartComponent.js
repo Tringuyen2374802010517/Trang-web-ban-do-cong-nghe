@@ -7,6 +7,19 @@ import { withRouter } from '../utils/withRouter';
 class Mycart extends Component {
   static contextType = MyContext;
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      showCheckout: false,
+      phone: "", // giữ nguyên nhưng không dùng
+      address: "",
+      note: "",
+      deliveryType: "delivery",
+      paymentMethod: "",
+      selectedStore: ""
+    };
+  }
+
   render() {
     const cart = this.context.mycart || [];
 
@@ -49,8 +62,6 @@ class Mycart extends Component {
             <button
               style={styles.removeBtn}
               onClick={() => this.lnkRemoveClick(p._id)}
-              onMouseEnter={e=>e.target.style.background="#d32f2f"}
-              onMouseLeave={e=>e.target.style.background="#ff4d4d"}
             >
               Remove
             </button>
@@ -62,12 +73,9 @@ class Mycart extends Component {
     return (
       <div style={styles.container}>
 
-        {/* ✅ NÚT BACK */}
         <button
           style={styles.backBtn}
           onClick={() => this.props.router.navigate(-1)}
-          onMouseEnter={e=>e.target.style.background="#eee"}
-          onMouseLeave={e=>e.target.style.background="#fff"}
         >
           ← Back
         </button>
@@ -102,16 +110,175 @@ class Mycart extends Component {
           </h3>
 
           <button
-            style={styles.checkoutBtn}
-            onClick={() => this.lnkCheckoutClick()}
-            onMouseEnter={e=>e.target.style.background="#2e7d32"}
-            onMouseLeave={e=>e.target.style.background="#4CAF50"}
+            style={{
+              ...styles.checkoutBtn,
+              ...(cart.length === 0 ? styles.disabledBtn : {})
+            }}
+            disabled={cart.length === 0}
+            onClick={() => this.setState({ showCheckout: true })}
           >
             Checkout
           </button>
         </div>
+
+        {/* ================= MODAL ================= */}
+        {this.state.showCheckout && (
+          <div style={styles.overlay}>
+            <div style={styles.modal}>
+
+              <h2 style={styles.modalTitle}>THÔNG TIN ĐẶT HÀNG</h2>
+
+              {/* DELIVERY */}
+              <div style={styles.section}>
+                <div style={styles.sectionTitle}>HÌNH THỨC GIAO HÀNG</div>
+
+                <label style={styles.radio}>
+                  <input
+                    type="radio"
+                    checked={this.state.deliveryType === "delivery"}
+                    onChange={() => this.setState({ deliveryType: "delivery" })}
+                  />
+                  Giao hàng tận nơi
+                </label>
+
+                <label style={styles.radio}>
+                  <input
+                    type="radio"
+                    checked={this.state.deliveryType === "store"}
+                    onChange={() => this.setState({ deliveryType: "store" })}
+                  />
+                  Nhận hàng tại cửa hàng
+                </label>
+              </div>
+
+              {/* DELIVERY FORM */}
+              {this.state.deliveryType === "delivery" && (
+                <>
+                  <label style={styles.label}>
+                    Địa chỉ <span style={styles.required}>*</span>
+                  </label>
+                  <input
+                    style={styles.input}
+                    value={this.state.address}
+                    onChange={e => this.setState({ address: e.target.value })}
+                  />
+                </>
+              )}
+
+              {/* STORE */}
+              {this.state.deliveryType === "store" && (
+                <div style={styles.storeList}>
+                  {[
+                    "11 Trần Não, Thủ Đức",
+                    "19 Đồng Khởi, Quận 1",
+                    "3 Phan Đăng Lưu, Bình Thạnh",
+                    "237 Khánh Hội, Quận 4"
+                  ].map((s, i) => (
+                    <label key={i} style={styles.storeItem}>
+                      <input
+                        type="radio"
+                        checked={this.state.selectedStore === s}
+                        onChange={() => this.setState({ selectedStore: s })}
+                      />
+                      {s}
+                    </label>
+                  ))}
+                </div>
+              )}
+
+              {/* NOTE */}
+              <textarea
+                style={styles.input}
+                placeholder="Nhập yêu cầu"
+                value={this.state.note}
+                onChange={e => this.setState({ note: e.target.value })}
+              />
+
+              {/* PAYMENT */}
+              <div style={styles.section}>
+                <div style={styles.sectionTitle}>
+                  PHƯƠNG THỨC THANH TOÁN <span style={styles.required}>*</span>
+                </div>
+
+                <select
+                  style={styles.input}
+                  value={this.state.paymentMethod}
+                  onChange={e => this.setState({ paymentMethod: e.target.value })}
+                >
+                  <option value="">Chọn phương thức</option>
+                  <option value="cod">Thanh toán tiền mặt</option>
+                  <option value="bank">Chuyển khoản</option>
+                </select>
+              </div>
+
+              {/* QR */}
+              {this.state.paymentMethod === "bank" && (
+                <div style={styles.qrBox}>
+                  <p>Quét mã để thanh toán</p>
+                  <img
+                    src="/IMG_3856.jpeg"
+                    style={styles.qr}
+                    alt=""
+                  />
+                </div>
+              )}
+
+              {/* BUTTON */}
+              <div style={styles.modalActions}>
+                <button
+                  style={styles.cancelBtn}
+                  onClick={() => this.setState({ showCheckout: false })}
+                >
+                  Hủy
+                </button>
+
+                <button
+                  style={styles.confirmBtn}
+                  onClick={() => this.handleConfirmCheckout()}
+                >
+                  Đặt hàng
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
+
       </div>
     );
+  }
+
+  handleConfirmCheckout() {
+
+    if (this.state.deliveryType === "delivery") {
+      if (!this.state.address) {
+        alert("Vui lòng nhập địa chỉ!");
+        return;
+      }
+    }
+
+    if (this.state.deliveryType === "store") {
+      if (!this.state.selectedStore) {
+        alert("Chọn cửa hàng!");
+        return;
+      }
+    }
+
+    if (!this.state.paymentMethod) {
+      alert("Chọn phương thức thanh toán!");
+      return;
+    }
+
+    const total = CartUtil.getTotal(this.context.mycart);
+
+    const items = this.context.mycart.map(item => ({
+      product: item.product?._id,
+      quantity: item.quantity
+    }));
+
+    this.setState({ showCheckout: false });
+
+    this.apiCheckout(total, items);
   }
 
   lnkRemoveClick(id) {
@@ -124,29 +291,16 @@ class Mycart extends Component {
     }
   }
 
-  lnkCheckoutClick() {
-    if (window.confirm("Xác nhận đặt hàng?")) {
-
-      const total = CartUtil.getTotal(this.context.mycart);
-
-      const items = this.context.mycart.map(item => ({
-        product: item.product?._id,
-        quantity: item.quantity
-      }));
-
-      if (this.context.customer) {
-        this.apiCheckout(total, items);
-      } else {
-        this.props.router.navigate('/login')
-      }
-    }
-  }
-
   apiCheckout(total, items) {
 
     const body = {
       total: total,
-      items: items
+      items: items,
+      address: this.state.address,
+      deliveryType: this.state.deliveryType,
+      selectedStore: this.state.selectedStore,
+      paymentMethod: this.state.paymentMethod,
+      note: this.state.note 
     };
 
     const config = {
@@ -168,87 +322,74 @@ class Mycart extends Component {
 
       })
       .catch(err => {
-
-        const msg =
-          err.response?.data?.message ||
-          err.message ||
-          "Server error";
-
-        alert("❌ " + msg);
+        alert("❌ Server error");
       });
   }
 }
 
-/* ================= STYLE ================= */
 const styles = {
-
   container: {
-    width: "90%",
-    margin: "30px auto",
-    padding: "25px",
+    width: "95%",
+    maxWidth: "1200px",
+    margin: "40px auto",
+    padding: "30px",
     background: "#fff",
-    borderRadius: "15px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
+    borderRadius: "16px",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.1)"
   },
 
   backBtn: {
-    marginBottom:"15px",
-    padding:"8px 16px",
-    borderRadius:"8px",
-    border:"1px solid #000",
+    marginBottom:"20px",
+    padding:"10px 18px",
+    borderRadius:"10px",
+    border:"1px solid #ddd",
     background:"#fff",
-    cursor:"pointer",
-    fontWeight:"bold",
-    transition:"0.3s"
+    cursor:"pointer"
   },
 
   title: {
     textAlign: "center",
-    marginBottom: "25px",
-    fontSize: "24px"
+    marginBottom: "30px",
+    fontSize: "28px",
+    fontWeight: "700"
   },
 
   table: {
     width: "100%",
-    borderCollapse: "collapse"
+    borderCollapse: "separate",
+    borderSpacing: "0 10px"
   },
 
   header: {
-    background: "linear-gradient(45deg, #4CAF50, #2e7d32)",
-    color: "white",
-    height: "45px"
+    background: "#f5f5f5",
+    height: "50px"
   },
 
   row: {
     textAlign: "center",
-    borderBottom: "1px solid #eee",
-    transition: "0.2s"
+    background: "#fff",
+    boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
   },
 
   name: {
-    fontWeight: "bold",
-    color: "#333"
+    fontWeight: "600"
   },
 
   img: {
-    width: "60px",
-    height: "60px",
-    borderRadius: "8px",
+    width: "70px",
+    height: "70px",
+    borderRadius: "10px",
     objectFit: "cover"
   },
 
-  price: {
-    color: "#555"
-  },
-
   qty: {
-    padding: "4px 10px",
     background: "#eee",
-    borderRadius: "10px"
+    padding: "6px 12px",
+    borderRadius: "12px"
   },
 
   amount: {
-    fontWeight: "bold",
+    fontWeight: "700",
     color: "#e53935"
   },
 
@@ -256,40 +397,142 @@ const styles = {
     background: "#ff4d4d",
     border: "none",
     color: "white",
-    padding: "6px 12px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    transition: "0.3s"
+    padding: "8px 14px",
+    borderRadius: "8px",
+    cursor: "pointer"
   },
 
   checkoutBtn: {
-    background: "#4CAF50",
+    background: "linear-gradient(135deg,#4CAF50,#2e7d32)",
     color: "white",
-    padding: "12px 20px",
+    padding: "14px 26px",
     border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "bold",
-    transition: "0.3s"
+    borderRadius: "10px",
+    cursor: "pointer"
+  },
+
+  disabledBtn: {
+    background: "#ccc",
+    cursor: "not-allowed"
   },
 
   footer: {
-    marginTop: "25px",
+    marginTop: "30px",
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
+    justifyContent: "space-between"
   },
 
   total: {
-    color: "#e53935"
+    color: "#e53935",
+    fontWeight: "700"
   },
 
   empty: {
     textAlign: "center",
-    padding: "30px",
-    color: "#777"
-  }
+    padding: "40px"
+  },
 
+  overlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.6)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  modal: {
+    background: "#fff",
+    padding: "25px",
+    borderRadius: "16px",
+    width: "100%",
+    maxWidth: "820px",
+    maxHeight: "70vh",   // 🔥 GIỚI HẠN CHIỀU CAO
+  overflowY: "auto" 
+  },
+
+  modalTitle: {
+    fontWeight: "700",
+    marginBottom: "20px",
+    fontSize: "22px"
+  },
+
+  section: {
+    marginBottom: "15px"
+  },
+
+  sectionTitle: {
+    fontWeight: "600",
+    marginBottom: "8px"
+  },
+
+  radio: {
+    display: "block",
+    marginBottom: "5px"
+  },
+
+  storeList: {
+    border: "1px solid #eee",
+    padding: "10px",
+    borderRadius: "8px",
+    marginBottom: "10px"
+  },
+
+  storeItem: {
+    display: "block",
+    marginBottom: "6px"
+  },
+
+  label: {
+    fontWeight: "600",
+    display: "block",
+    marginBottom: "5px"
+  },
+
+  required: {
+    color: "red"
+  },
+
+  input: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "15px",
+    borderRadius: "8px",
+    border: "1px solid #ccc"
+  },
+
+  qrBox: {
+    textAlign: "center",
+    margin: "15px 0"
+  },
+
+  qr: {
+    width: "260px",
+    borderRadius: "12px"
+  },
+
+  modalActions: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
+
+  cancelBtn: {
+    background: "#ccc",
+    padding: "10px 16px",
+    border: "none",
+    borderRadius: "8px"
+  },
+
+  confirmBtn: {
+    background: "#4CAF50",
+    color: "#fff",
+    padding: "10px 16px",
+    border: "none",
+    borderRadius: "8px"
+  }
 };
 
 export default withRouter(Mycart);

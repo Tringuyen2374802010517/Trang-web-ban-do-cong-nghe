@@ -122,6 +122,50 @@ class Myorders extends Component {
 
             <h2 style={styles.title}>🧾 Order Detail</h2>
 
+            {/* 🔥 FIX CHUẨN LOGIC HIỂN THỊ */}
+            <div style={styles.infoBox}>
+
+              {/* DELIVERY TYPE */}
+              <p>
+                <b>Hình thức giao hàng:</b>{" "}
+                {selectedOrder.deliveryType === "delivery"
+                  ? "Giao tận nơi"
+                  : "Nhận tại cửa hàng"}
+              </p>
+
+              {/* ADDRESS */}
+              {selectedOrder.deliveryType === "delivery" && selectedOrder.address && (
+                <p>
+                  <b>Địa chỉ:</b> {selectedOrder.address}
+                </p>
+              )}
+
+              {/* STORE */}
+              {selectedOrder.deliveryType === "store" && selectedOrder.selectedStore && (
+                <p>
+                  <b>Nhận tại cửa hàng:</b> {selectedOrder.selectedStore}
+                </p>
+              )}
+
+              {/* PAYMENT */}
+              <p>
+                <b>Thanh toán:</b>{" "}
+                {selectedOrder.paymentMethod === "cod"
+                  ? "Tiền mặt"
+                  : selectedOrder.paymentMethod === "bank"
+                  ? "Chuyển khoản"
+                  : ""}
+              </p>
+
+              {/* NOTE (MỚI THÊM) */}
+              {selectedOrder.note && (
+                <p>
+                  <b>Ghi chú:</b> {selectedOrder.note}
+                </p>
+              )}
+
+            </div>
+
             <table style={styles.table}>
               <thead>
                 <tr style={styles.header}>
@@ -171,70 +215,76 @@ class Myorders extends Component {
   }
 }
 
-/* ===== STYLE ===== */
 const styles = {
-
   container: {
-    width: "90%",
-    margin: "30px auto",
-    padding: "25px",
+    width: "95%",
+    maxWidth: "1200px",
+    margin: "40px auto",
+    padding: "30px",
     background: "#fff",
-    borderRadius: "15px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)"
+    borderRadius: "16px",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.1)"
   },
 
   title: {
     textAlign: "center",
-    marginBottom: "20px",
-    fontSize: "22px"
+    marginBottom: "25px",
+    fontSize: "26px",
+    fontWeight: "700"
   },
 
   table: {
     width: "100%",
-    borderCollapse: "collapse"
+    borderCollapse: "separate",
+    borderSpacing: "0 10px"
   },
 
   header: {
-    background: "linear-gradient(45deg, #4CAF50, #2e7d32)",
-    color: "white",
-    height: "45px"
+    background: "#f5f5f5",
+    height: "50px"
   },
 
   row: {
     textAlign: "center",
-    borderBottom: "1px solid #eee",
-    cursor: "pointer",
-    transition: "0.2s"
+    background: "#fff",
+    boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
+    cursor: "pointer"
   },
 
   name: {
-    fontWeight: "bold",
-    color: "#333"
+    fontWeight: "600"
   },
 
   img: {
-    width: "60px",
-    height: "60px",
-    borderRadius: "8px",
+    width: "70px",
+    height: "70px",
+    borderRadius: "10px",
     objectFit: "cover"
   },
 
   qty: {
-    background: "#eee",
-    padding: "4px 10px",
-    borderRadius: "10px"
+    background: "#f0f0f0",
+    padding: "6px 12px",
+    borderRadius: "12px"
   },
 
   amount: {
-    fontWeight: "bold",
+    fontWeight: "700",
     color: "#e53935"
   },
 
   total: {
-    fontWeight: "bold",
+    fontWeight: "700",
     color: "#1976d2"
-  }
+  },
 
+  infoBox: {
+    background: "#f9f9f9",
+    padding: "15px",
+    borderRadius: "10px",
+    marginBottom: "20px",
+    textAlign: "left"
+  }
 };
 
 export default Myorders;

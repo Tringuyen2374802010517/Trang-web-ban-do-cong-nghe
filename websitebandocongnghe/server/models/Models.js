@@ -52,47 +52,14 @@ const ProductSchema = new mongoose.Schema({
     required: true
   }],
 
-  // 🔥 THÊM THÔNG SỐ SẢN PHẨM
-  battery: {
-    type: String,
-    default: ""
-  },
-
-  year: {
-    type: String,
-    default: ""
-  },
-
-  compatible: {
-    type: String,
-    default: ""
-  },
-
-  feature: {
-    type: String,
-    default: ""
-  },
-
-  port: {
-    type: String,
-    default: ""
-  },
-
-  size: {
-    type: String,
-    default: ""
-  },
-
-  weight: {
-    type: String,
-    default: ""
-  },
-
-  brand: {
-    type: String,
-    default: ""
-  }
-
+  battery: { type: String, default: "" },
+  year: { type: String, default: "" },
+  compatible: { type: String, default: "" },
+  feature: { type: String, default: "" },
+  port: { type: String, default: "" },
+  size: { type: String, default: "" },
+  weight: { type: String, default: "" },
+  brand: { type: String, default: "" }
 });
 
 // ================= CUSTOMER =================
@@ -127,7 +94,14 @@ const OrderSchema = new mongoose.Schema({
       },
       quantity: Number
     }
-  ]
+  ],
+
+  // 🔥 THÊM ĐÚNG 5 FIELD (KHÔNG ĐỤNG PHẦN KHÁC)
+  address: String,
+  deliveryType: String,
+  selectedStore: String,
+  paymentMethod: String,
+  note: String
 });
 
 // ================= EXPORT =================

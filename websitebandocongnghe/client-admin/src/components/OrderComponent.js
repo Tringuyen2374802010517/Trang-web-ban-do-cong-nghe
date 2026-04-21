@@ -117,7 +117,7 @@ class Order extends Component {
           <td>
             {item.product?.images?.length > 0 && (
               <img
-                src={"http://localhost:3001/uploads/" + item.product.images[0]} // ✅ FIX Ở ĐÂY
+                src={"http://localhost:3001/uploads/" + item.product.images[0]}
                 width="70"
                 height="70"
                 alt=""
@@ -155,6 +155,44 @@ class Order extends Component {
         {this.state.order && (
           <>
             <h2>ORDER DETAIL</h2>
+
+            {/* 🔥 THÊM PHẦN NÀY (KHÔNG ĐỤNG CODE CŨ) */}
+            <div style={{ marginBottom: "15px" }}>
+              <p>
+                <b>Hình thức giao hàng:</b>{" "}
+                {this.state.order.deliveryType === "delivery"
+                  ? "Giao tận nơi"
+                  : "Nhận tại cửa hàng"}
+              </p>
+
+              {this.state.order.deliveryType === "delivery" && (
+                <p>
+                  <b>Địa chỉ:</b> {this.state.order.address}
+                </p>
+              )}
+
+              {this.state.order.deliveryType === "store" && (
+                <p>
+                  <b>Nhận tại cửa hàng:</b> {this.state.order.selectedStore}
+                </p>
+              )}
+
+              <p>
+                <b>Thanh toán:</b>{" "}
+                {this.state.order.paymentMethod === "cod"
+                  ? "Tiền mặt"
+                  : this.state.order.paymentMethod === "bank"
+                  ? "Chuyển khoản"
+                  : ""}
+              </p>
+
+              {this.state.order.note && (
+                <p>
+                  <b>Ghi chú:</b> {this.state.order.note}
+                </p>
+              )}
+            </div>
+
             <table border="1" cellPadding="5" cellSpacing="0">
               <thead>
                 <tr>

@@ -11,6 +11,12 @@ const CustomerDAO = {
     return customer;
   },
 
+  // 🔥 THÊM HÀM NÀY (FIX LỖI LOGIN)
+  async selectByUsername(username) {
+    const customer = await Models.Customer.findOne({ username: username });
+    return customer;
+  },
+
   // ================= INSERT CUSTOMER =================
   async insert(customer) {
     customer._id = new mongoose.Types.ObjectId();
@@ -24,7 +30,7 @@ const CustomerDAO = {
       console.log("ACTIVE INPUT:", _id, token);
 
       const query = {
-        _id: new mongoose.Types.ObjectId(_id), // ✅ FIX
+        _id: new mongoose.Types.ObjectId(_id),
         token: token
       };
 

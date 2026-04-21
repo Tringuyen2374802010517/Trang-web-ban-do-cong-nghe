@@ -111,7 +111,7 @@ router.post('/signup', async (req, res) => {
     res.json({
       success: !!result,
       message: result
-        ? 'Signup success! Please check your email to activate your account.' // ✅ FIX
+        ? 'Signup success! Please check your email to activate your account.'
         : 'Insert failure',
       id: result?._id,
       token
@@ -143,27 +143,54 @@ router.post('/active', async (req, res) => {
 });
 
 
-// ================= LOGIN =================
+// ================= LOGIN (🔥 ĐÃ FIX CHUẨN) =================
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res.json({ success: false });
+    if (!username || !password) {
+      return res.json({ success: false, message: "Missing data" });
+    }
+
+    // 🔥 TÌM USER TRƯỚC
+    const customer = await CustomerDAO.selectByUsername(username);
+
+    // ❌ KHÔNG TỒN TẠI
+    if (!customer) {
+      return res.json({
+        success: false,
+        message: "Account not found"
+      });
+    }
+
+    // ❌ SAI PASSWORD
+    if (customer.password !== password) {
+      return res.json({
+        success: false,
+        message: "Password is incorrect"
+      });
+    }
+
+    // ❌ CHƯA ACTIVE
+    if (customer.active !== 1) {
+      return res.json({
+        success: false,
+        message: "Account is not active"
+      });
+    }
+
+    // ✅ OK
+    const token = JwtUtil.genToken({ _id: customer._id });
+
+    res.json({
+      success: true,
+      token,
+      customer
+    });
+
+  } catch (err) {
+    res.status(500).json({ success: false });
   }
-
-  const customer = await CustomerDAO.selectByUsernameAndPassword(username, password);
-
-  if (!customer || customer.active !== 1) {
-    return res.json({ success: false });
-  }
-
-  const token = JwtUtil.genToken({ _id: customer._id });
-
-  res.json({
-    success: true,
-    token,
-    customer
-  });
 });
 
 
@@ -206,7 +233,13 @@ router.post('/checkout', JwtUtil.checkToken, async (req, res) => {
       total: req.body.total,
       status: 'PENDING',
       customer: req.decoded._id,
-      items: req.body.items
+      items: req.body.items,
+
+      address: req.body.address,
+      deliveryType: req.body.deliveryType,
+      selectedStore: req.body.selectedStore,
+      paymentMethod: req.body.paymentMethod,
+      note: req.body.note
     };
 
     const result = await OrderDAO.insert(order);

@@ -104,11 +104,8 @@ router.get('/products', JwtUtil.checkToken, async (req, res) => {
   }
 });
 
-// 🔥 ADD PRODUCT
 router.post('/products', JwtUtil.checkToken, upload.single('image'), async (req, res) => {
   try {
-
-    console.log("BODY:", req.body); // 🔥 debug
 
     const product = {
       name: req.body.name,
@@ -117,7 +114,6 @@ router.post('/products', JwtUtil.checkToken, upload.single('image'), async (req,
       images: req.file ? [req.file.filename] : [],
       show: true,
 
-      // ✅ THÊM THÔNG SỐ
       battery: req.body.battery,
       year: req.body.year,
       compatible: req.body.compatible,
@@ -136,11 +132,8 @@ router.post('/products', JwtUtil.checkToken, upload.single('image'), async (req,
   }
 });
 
-// 🔥 UPDATE PRODUCT
 router.put('/products/:id', JwtUtil.checkToken, upload.single('image'), async (req, res) => {
   try {
-
-    console.log("BODY:", req.body); // 🔥 debug
 
     const product = {
       _id: req.params.id,
@@ -149,7 +142,6 @@ router.put('/products/:id', JwtUtil.checkToken, upload.single('image'), async (r
       categories_id: req.body.categories_id ? [req.body.categories_id] : [],
       show: req.body.show ?? true,
 
-      // ✅ THÊM THÔNG SỐ
       battery: req.body.battery,
       year: req.body.year,
       compatible: req.body.compatible,
@@ -232,6 +224,8 @@ router.put('/customers/deactive/:id', JwtUtil.checkToken, async (req, res) => {
   }
 });
 
+
+// 🔥 SỬA DUY NHẤT Ở ĐÂY
 router.get('/customers/sendmail/:id', JwtUtil.checkToken, async (req, res) => {
   try {
     const cust = await CustomerDAO.selectByID(req.params.id);
@@ -240,12 +234,18 @@ router.get('/customers/sendmail/:id', JwtUtil.checkToken, async (req, res) => {
       return res.json({ success: false, message: 'Not found' });
     }
 
-    const send = await EmailUtil.send(cust.email, cust._id, cust.token);
+    // 🔥 DÙNG HÀM MỚI (EMAIL BỊ KHÓA)
+    const send = await EmailUtil.sendDeactive(
+      cust.email,
+      cust.name,
+      cust._id,
+      cust.token
+    );
 
     if (send) {
-      res.json({ success: true, message: 'Please check email' });
+      res.json({ success: true, message: 'Sent Email Successfully.' });
     } else {
-      res.json({ success: false, message: 'Email failure' });
+      res.json({ success: false, message: 'Email failure!' });
     }
 
   } catch (err) {

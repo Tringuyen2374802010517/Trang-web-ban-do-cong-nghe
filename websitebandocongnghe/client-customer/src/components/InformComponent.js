@@ -52,7 +52,7 @@ class InformComponent extends Component {
             <div style={{display:"flex", gap:"15px", alignItems:"center"}}>
 
               <span>
-                Hello <b style={{color:"#007aff"}}>
+                Hello <b style={{color:"#FFFBD1"}}>
                   {this.context.customer.name}
                 </b>
               </span>
