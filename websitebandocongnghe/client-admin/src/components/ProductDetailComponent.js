@@ -16,7 +16,6 @@ class ProductDetail extends Component {
       imagePreview: null,
       categories: [],
 
-      // SPECIFICATIONS
       txtBattery: '',
       txtYear: '',
       txtCompatible: '',
@@ -26,7 +25,6 @@ class ProductDetail extends Component {
       txtWeight: '',
       txtBrand: '',
 
-      // VALIDATION
       errors: {}
     };
   }
@@ -51,12 +49,10 @@ class ProductDetail extends Component {
 
         fileImage: null,
 
-        // FIX IMAGE
         imagePreview: p.images?.[0]
-          ? `http://localhost:3001/uploads/${p.images[0].replace('uploads/', '')}`
+          ? `http://localhost:3001/uploads/${p.images[0]}`
           : null,
 
-        // LOAD SPEC
         txtBattery: p.battery || '',
         txtYear: p.year || '',
         txtCompatible: p.compatible || '',
@@ -71,62 +67,39 @@ class ProductDetail extends Component {
     }
   }
 
-  // =========================
-  // VALIDATE
-  // =========================
+  // ================= VALIDATE =================
   validate = () => {
     const errors = {};
 
-    if (!this.state.txtName.trim()) {
-      errors.name = "Name is required";
-    }
+    if (!this.state.txtName.trim()) errors.name = "Name is required";
+    if (!this.state.txtPrice) errors.price = "Price is required";
+    else if (isNaN(this.state.txtPrice)) errors.price = "Must be number";
 
-    if (!this.state.txtPrice) {
-      errors.price = "Price is required";
-    } else if (isNaN(this.state.txtPrice)) {
-      errors.price = "Price must be a number";
-    }
-
-    if (!this.state.cmbCategory) {
-      errors.category = "Please select category";
-    }
-
-    if (!this.state.txtBattery.trim()) {
-      errors.battery = "Battery is required";
-    }
-
-    if (this.state.txtYear && isNaN(this.state.txtYear)) {
-      errors.year = "Year must be a number";
-    }
+    if (!this.state.cmbCategory) errors.category = "Select category";
+    if (!this.state.txtBattery.trim()) errors.battery = "Battery required";
+    if (this.state.txtYear && isNaN(this.state.txtYear)) errors.year = "Must be number";
 
     this.setState({ errors });
     return Object.keys(errors).length === 0;
   };
 
-  // =========================
-  // GET CATEGORY
-  // =========================
+  // ================= API =================
   apiGetCategories() {
     axios.get('/api/admin/categories', {
       headers: { Authorization: `Bearer ${this.context.token}` }
     })
       .then(res => {
         this.setState({ categories: res.data.categories || [] });
-      })
-      .catch(err => console.error(err));
+      });
   }
 
-  // =========================
-  // ADD
-  // =========================
   btnAddNewClick = () => {
-
     if (!this.validate()) return;
 
     const formData = new FormData();
 
     formData.append('name', this.state.txtName);
-    formData.append('price', parseFloat(this.state.txtPrice));
+    formData.append('price', this.state.txtPrice);
     formData.append('categories_id', this.state.cmbCategory);
 
     formData.append('battery', this.state.txtBattery);
@@ -138,32 +111,24 @@ class ProductDetail extends Component {
     formData.append('weight', this.state.txtWeight);
     formData.append('brand', this.state.txtBrand);
 
-    if (this.state.fileImage) {
-      formData.append('image', this.state.fileImage);
-    }
+    if (this.state.fileImage) formData.append('image', this.state.fileImage);
 
     axios.post('/api/admin/products', formData, {
       headers: { Authorization: `Bearer ${this.context.token}` }
-    })
-      .then(() => {
-        alert('Add success');
-        this.props.reload();
-        this.resetForm();
-      })
-      .catch(() => alert('Add failed'));
+    }).then(() => {
+      alert('Add success');
+      this.props.reload();
+      this.resetForm();
+    });
   };
 
-  // =========================
-  // UPDATE
-  // =========================
   btnUpdateClick = () => {
-
     if (!this.validate()) return;
 
     const formData = new FormData();
 
     formData.append('name', this.state.txtName);
-    formData.append('price', parseFloat(this.state.txtPrice));
+    formData.append('price', this.state.txtPrice);
     formData.append('categories_id', this.state.cmbCategory);
 
     formData.append('battery', this.state.txtBattery);
@@ -175,54 +140,28 @@ class ProductDetail extends Component {
     formData.append('weight', this.state.txtWeight);
     formData.append('brand', this.state.txtBrand);
 
-    if (this.state.fileImage) {
-      formData.append('image', this.state.fileImage);
-    }
+    if (this.state.fileImage) formData.append('image', this.state.fileImage);
 
     axios.put(`/api/admin/products/${this.state.txtID}`, formData, {
       headers: { Authorization: `Bearer ${this.context.token}` }
-    })
-      .then((res) => {
-        alert('Update success');
-
-        const p = res.data.product;
-
-        this.setState({
-          txtBattery: p.battery || '',
-          txtYear: p.year || '',
-          txtCompatible: p.compatible || '',
-          txtFeature: p.feature || '',
-          txtPort: p.port || '',
-          txtSize: p.size || '',
-          txtWeight: p.weight || '',
-          txtBrand: p.brand || ''
-        });
-
-        this.props.reload();
-      })
-      .catch(() => alert('Update failed'));
+    }).then(() => {
+      alert('Update success');
+      this.props.reload();
+    });
   };
 
-  // =========================
-  // DELETE
-  // =========================
   btnDeleteClick = () => {
-    if (!window.confirm('Delete this product?')) return;
+    if (!window.confirm('Delete?')) return;
 
     axios.delete(`/api/admin/products/${this.state.txtID}`, {
       headers: { Authorization: `Bearer ${this.context.token}` }
-    })
-      .then(() => {
-        alert('Delete success');
-        this.props.reload();
-        this.resetForm();
-      })
-      .catch(() => alert('Delete failed'));
+    }).then(() => {
+      alert('Delete success');
+      this.props.reload();
+      this.resetForm();
+    });
   };
 
-  // =========================
-  // RESET
-  // =========================
   resetForm() {
     this.setState({
       txtID: '',
@@ -231,7 +170,6 @@ class ProductDetail extends Component {
       cmbCategory: '',
       fileImage: null,
       imagePreview: null,
-
       txtBattery: '',
       txtYear: '',
       txtCompatible: '',
@@ -240,125 +178,129 @@ class ProductDetail extends Component {
       txtSize: '',
       txtWeight: '',
       txtBrand: '',
-
       errors: {}
     });
   }
 
-  // =========================
-  // RENDER
-  // =========================
+  // ================= STYLE =================
+  styles = {
+    input: { width: '100%', padding: '10px', marginBottom: '8px', borderRadius: '8px', border: 'none' },
+    label: { fontSize: '13px', opacity: 0.9 },
+    error: { color: '#ff5252', fontSize: '12px' },
+    grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' },
+    img: { width: '120px', borderRadius: '10px', marginTop: '10px' },
+    btn: { padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', marginRight: '10px' },
+    required: { color: '#ff5252', marginLeft: '4px' }
+  };
+
   render() {
     return (
-      <div style={{ minWidth: '320px' }}>
-        <h2>PRODUCT DETAIL</h2>
+      <div>
+        <p style={{ fontSize: '12px', color: '#ff8a80' }}>
+          * Required fields
+        </p>
 
-        <p>ID</p>
-        <input value={this.state.txtID} readOnly />
-
-        <p>Name</p>
-        <input
+        {/* NAME */}
+        <p style={this.styles.label}>
+          Name <span style={this.styles.required}>*</span>
+        </p>
+        <input style={this.styles.input}
           value={this.state.txtName}
           onChange={e => this.setState({ txtName: e.target.value })}
         />
-        {this.state.errors.name && <div style={{ color: 'red' }}>{this.state.errors.name}</div>}
+        {this.state.errors.name && <div style={this.styles.error}>{this.state.errors.name}</div>}
 
-        <p>Price</p>
-        <input
+        {/* PRICE */}
+        <p style={this.styles.label}>
+          Price <span style={this.styles.required}>*</span>
+        </p>
+        <input style={this.styles.input}
           value={this.state.txtPrice}
           onChange={e => this.setState({ txtPrice: e.target.value })}
         />
-        {this.state.errors.price && <div style={{ color: 'red' }}>{this.state.errors.price}</div>}
+        {this.state.errors.price && <div style={this.styles.error}>{this.state.errors.price}</div>}
 
-        <p>Image</p>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={e => {
-            const file = e.target.files[0];
-            if (file) {
-              this.setState({
-                fileImage: file,
-                imagePreview: URL.createObjectURL(file)
-              });
-            }
-          }}
-        />
-
-        {this.state.imagePreview && (
-          <img src={this.state.imagePreview} width="150" alt="preview" />
-        )}
-
-        <p>Category</p>
-        <select
+        {/* CATEGORY */}
+        <p style={this.styles.label}>
+          Category <span style={this.styles.required}>*</span>
+        </p>
+        <select style={this.styles.input}
           value={this.state.cmbCategory}
           onChange={e => this.setState({ cmbCategory: e.target.value })}
         >
-          <option value="">-- Select Category --</option>
+          <option value="">Select</option>
           {this.state.categories.map(c => (
             <option key={c._id} value={c._id}>{c.name}</option>
           ))}
         </select>
-        {this.state.errors.category && <div style={{ color: 'red' }}>{this.state.errors.category}</div>}
+        {this.state.errors.category && <div style={this.styles.error}>{this.state.errors.category}</div>}
 
-        <hr />
-        <h3>📊 Product Specifications</h3>
+        {/* IMAGE */}
+        <p style={this.styles.label}>Image</p>
+        <input type="file"
+          onChange={e => {
+            const file = e.target.files[0];
+            this.setState({
+              fileImage: file,
+              imagePreview: URL.createObjectURL(file)
+            });
+          }}
+        />
 
-        <table style={{ width: '100%' }}>
-          <tbody>
-            <tr>
-              <td>Battery</td>
-              <td>
-                <input value={this.state.txtBattery} onChange={e => this.setState({ txtBattery: e.target.value })} />
-                {this.state.errors.battery && <div style={{ color: 'red' }}>{this.state.errors.battery}</div>}
-              </td>
-            </tr>
+        {this.state.imagePreview && (
+          <img src={this.state.imagePreview} style={this.styles.img} alt="" />
+        )}
 
-            <tr>
-              <td>Year</td>
-              <td>
-                <input value={this.state.txtYear} onChange={e => this.setState({ txtYear: e.target.value })} />
-                {this.state.errors.year && <div style={{ color: 'red' }}>{this.state.errors.year}</div>}
-              </td>
-            </tr>
+        {/* SPEC */}
+        <h3>Specifications</h3>
 
-            <tr>
-              <td>Compatible</td>
-              <td><input value={this.state.txtCompatible} onChange={e => this.setState({ txtCompatible: e.target.value })} /></td>
-            </tr>
+        <div style={this.styles.grid}>
+          <input style={this.styles.input} placeholder="Battery *"
+            value={this.state.txtBattery}
+            onChange={e => this.setState({ txtBattery: e.target.value })}
+          />
 
-            <tr>
-              <td>Feature</td>
-              <td><input value={this.state.txtFeature} onChange={e => this.setState({ txtFeature: e.target.value })} /></td>
-            </tr>
+          <input style={this.styles.input} placeholder="Year"
+            value={this.state.txtYear}
+            onChange={e => this.setState({ txtYear: e.target.value })}
+          />
 
-            <tr>
-              <td>Port</td>
-              <td><input value={this.state.txtPort} onChange={e => this.setState({ txtPort: e.target.value })} /></td>
-            </tr>
+          <input style={this.styles.input} placeholder="Compatible"
+            value={this.state.txtCompatible}
+            onChange={e => this.setState({ txtCompatible: e.target.value })}
+          />
 
-            <tr>
-              <td>Size</td>
-              <td><input value={this.state.txtSize} onChange={e => this.setState({ txtSize: e.target.value })} /></td>
-            </tr>
+          <input style={this.styles.input} placeholder="Feature"
+            value={this.state.txtFeature}
+            onChange={e => this.setState({ txtFeature: e.target.value })}
+          />
 
-            <tr>
-              <td>Weight</td>
-              <td><input value={this.state.txtWeight} onChange={e => this.setState({ txtWeight: e.target.value })} /></td>
-            </tr>
+          <input style={this.styles.input} placeholder="Port"
+            value={this.state.txtPort}
+            onChange={e => this.setState({ txtPort: e.target.value })}
+          />
 
-            <tr>
-              <td>Brand</td>
-              <td><input value={this.state.txtBrand} onChange={e => this.setState({ txtBrand: e.target.value })} /></td>
-            </tr>
-          </tbody>
-        </table>
+          <input style={this.styles.input} placeholder="Size"
+            value={this.state.txtSize}
+            onChange={e => this.setState({ txtSize: e.target.value })}
+          />
+
+          <input style={this.styles.input} placeholder="Weight"
+            value={this.state.txtWeight}
+            onChange={e => this.setState({ txtWeight: e.target.value })}
+          />
+
+          <input style={this.styles.input} placeholder="Brand"
+            value={this.state.txtBrand}
+            onChange={e => this.setState({ txtBrand: e.target.value })}
+          />
+        </div>
 
         <br />
 
-        <button onClick={this.btnAddNewClick}>ADD NEW</button>
-        <button onClick={this.btnUpdateClick}>UPDATE</button>
-        <button onClick={this.btnDeleteClick}>DELETE</button>
+        <button style={{ ...this.styles.btn, background: '#00c853', color: '#fff' }} onClick={this.btnAddNewClick}>ADD</button>
+        <button style={{ ...this.styles.btn, background: '#ffab00' }} onClick={this.btnUpdateClick}>UPDATE</button>
+        <button style={{ ...this.styles.btn, background: '#d50000', color: '#fff' }} onClick={this.btnDeleteClick}>DELETE</button>
       </div>
     );
   }

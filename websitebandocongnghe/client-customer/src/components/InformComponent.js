@@ -85,14 +85,14 @@ class InformComponent extends Component {
             to="/mycart"
             style={{
               ...styles.link,
-              background:"#C2C2C2",
+              background:"#83C75D",
               padding:"7px 15px",
               borderRadius:"10px",
               fontWeight:"bold",
               color:"#fff"
             }}
           >
-            🛒 {this.context.mycart.length} items
+            Shopping Cart: {this.context.mycart.length} Products
           </Link>
 
         </div>

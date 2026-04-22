@@ -11,7 +11,7 @@ class Mycart extends Component {
     super(props);
     this.state = {
       showCheckout: false,
-      phone: "", // giữ nguyên nhưng không dùng
+      phone: "", 
       address: "",
       note: "",
       deliveryType: "delivery",
@@ -80,7 +80,7 @@ class Mycart extends Component {
           ← Back
         </button>
 
-        <h2 style={styles.title}>🛒 My Shopping Cart</h2>
+        <h2 style={styles.title}>My Shopping Cart</h2>
 
         {cart.length === 0 ? (
           <div style={styles.empty}>
@@ -121,16 +121,14 @@ class Mycart extends Component {
           </button>
         </div>
 
-        {/* ================= MODAL ================= */}
         {this.state.showCheckout && (
           <div style={styles.overlay}>
             <div style={styles.modal}>
 
-              <h2 style={styles.modalTitle}>THÔNG TIN ĐẶT HÀNG</h2>
+              <h2 style={styles.modalTitle}>ORDER INFORMATION</h2>
 
-              {/* DELIVERY */}
               <div style={styles.section}>
-                <div style={styles.sectionTitle}>HÌNH THỨC GIAO HÀNG</div>
+                <div style={styles.sectionTitle}>DELIVERY METHOD</div>
 
                 <label style={styles.radio}>
                   <input
@@ -138,7 +136,7 @@ class Mycart extends Component {
                     checked={this.state.deliveryType === "delivery"}
                     onChange={() => this.setState({ deliveryType: "delivery" })}
                   />
-                  Giao hàng tận nơi
+                  Home delivery
                 </label>
 
                 <label style={styles.radio}>
@@ -147,15 +145,14 @@ class Mycart extends Component {
                     checked={this.state.deliveryType === "store"}
                     onChange={() => this.setState({ deliveryType: "store" })}
                   />
-                  Nhận hàng tại cửa hàng
+                  Pickup at store
                 </label>
               </div>
 
-              {/* DELIVERY FORM */}
               {this.state.deliveryType === "delivery" && (
                 <>
                   <label style={styles.label}>
-                    Địa chỉ <span style={styles.required}>*</span>
+                    Address <span style={styles.required}>*</span>
                   </label>
                   <input
                     style={styles.input}
@@ -165,14 +162,13 @@ class Mycart extends Component {
                 </>
               )}
 
-              {/* STORE */}
               {this.state.deliveryType === "store" && (
                 <div style={styles.storeList}>
                   {[
-                    "11 Trần Não, Thủ Đức",
-                    "19 Đồng Khởi, Quận 1",
-                    "3 Phan Đăng Lưu, Bình Thạnh",
-                    "237 Khánh Hội, Quận 4"
+                    "11 Tran Nao, Thu Duc",
+                    "19 Dong Khoi, District 1",
+                    "3 Phan Dang Luu, Binh Thanh",
+                    "237 Khanh Hoi, District 4"
                   ].map((s, i) => (
                     <label key={i} style={styles.storeItem}>
                       <input
@@ -186,18 +182,16 @@ class Mycart extends Component {
                 </div>
               )}
 
-              {/* NOTE */}
               <textarea
                 style={styles.input}
-                placeholder="Nhập yêu cầu"
+                placeholder="Enter your note"
                 value={this.state.note}
                 onChange={e => this.setState({ note: e.target.value })}
               />
 
-              {/* PAYMENT */}
               <div style={styles.section}>
                 <div style={styles.sectionTitle}>
-                  PHƯƠNG THỨC THANH TOÁN <span style={styles.required}>*</span>
+                  PAYMENT METHOD <span style={styles.required}>*</span>
                 </div>
 
                 <select
@@ -205,38 +199,32 @@ class Mycart extends Component {
                   value={this.state.paymentMethod}
                   onChange={e => this.setState({ paymentMethod: e.target.value })}
                 >
-                  <option value="">Chọn phương thức</option>
-                  <option value="cod">Thanh toán tiền mặt</option>
-                  <option value="bank">Chuyển khoản</option>
+                  <option value="">Select method</option>
+                  <option value="cod">Cash</option>
+                  <option value="bank">Bank transfer</option>
                 </select>
               </div>
 
-              {/* QR */}
               {this.state.paymentMethod === "bank" && (
                 <div style={styles.qrBox}>
-                  <p>Quét mã để thanh toán</p>
-                  <img
-                    src="/IMG_3856.jpeg"
-                    style={styles.qr}
-                    alt=""
-                  />
+                  <p>Scan QR to pay</p>
+                  <img src="/IMG_3856.jpeg" style={styles.qr} alt="" />
                 </div>
               )}
 
-              {/* BUTTON */}
               <div style={styles.modalActions}>
                 <button
                   style={styles.cancelBtn}
                   onClick={() => this.setState({ showCheckout: false })}
                 >
-                  Hủy
+                  Cancel
                 </button>
 
                 <button
                   style={styles.confirmBtn}
                   onClick={() => this.handleConfirmCheckout()}
                 >
-                  Đặt hàng
+                  Place Order
                 </button>
               </div>
 
@@ -250,22 +238,18 @@ class Mycart extends Component {
 
   handleConfirmCheckout() {
 
-    if (this.state.deliveryType === "delivery") {
-      if (!this.state.address) {
-        alert("Vui lòng nhập địa chỉ!");
-        return;
-      }
+    if (this.state.deliveryType === "delivery" && !this.state.address) {
+      alert("Please enter address!");
+      return;
     }
 
-    if (this.state.deliveryType === "store") {
-      if (!this.state.selectedStore) {
-        alert("Chọn cửa hàng!");
-        return;
-      }
+    if (this.state.deliveryType === "store" && !this.state.selectedStore) {
+      alert("Please select store!");
+      return;
     }
 
     if (!this.state.paymentMethod) {
-      alert("Chọn phương thức thanh toán!");
+      alert("Please choose payment method!");
       return;
     }
 
@@ -313,7 +297,7 @@ class Mycart extends Component {
       .then(res => {
 
         if (res.data.success) {
-          alert("🎉 Đặt hàng thành công!");
+          alert("🎉 Order placed successfully!");
           this.context.setMycart([]);
           this.props.router.navigate('/myorders')
         } else {
@@ -327,212 +311,93 @@ class Mycart extends Component {
   }
 }
 
+// ... GIỮ NGUYÊN TOÀN BỘ CODE PHÍA TRÊN
+
 const styles = {
-  container: {
-    width: "95%",
-    maxWidth: "1200px",
-    margin: "40px auto",
-    padding: "30px",
-    background: "#fff",
-    borderRadius: "16px",
-    boxShadow: "0 15px 40px rgba(0,0,0,0.1)"
+
+  container:{ width:"95%", maxWidth:"1200px", margin:"40px auto", padding:"30px", background:"#fff", borderRadius:"16px", boxShadow:"0 15px 40px rgba(0,0,0,0.1)" },
+
+  backBtn:{ marginBottom:"20px", padding:"10px 18px", borderRadius:"10px", border:"1px solid #ddd", background:"#fff", cursor:"pointer" },
+
+  title:{ textAlign:"center", marginBottom:"30px", fontSize:"28px", fontWeight:"700" },
+
+  table:{ width:"100%", borderCollapse:"separate", borderSpacing:"0 10px" },
+
+  header:{ background:"#f5f5f5", height:"50px" },
+
+  row:{ textAlign:"center", background:"#fff", boxShadow:"0 5px 15px rgba(0,0,0,0.05)", transition:"0.2s" },
+
+  name:{ fontWeight:"600" },
+
+  img:{ width:"70px", height:"70px", borderRadius:"10px", objectFit:"cover" },
+
+  qty:{ background:"#eee", padding:"6px 12px", borderRadius:"12px" },
+
+  amount:{ fontWeight:"700", color:"#e53935" },
+
+  /* 🔥 REMOVE BUTTON (SHOPEE STYLE) */
+  removeBtn:{ 
+    background:"#ff4d4d", 
+    border:"none", 
+    color:"white", 
+    padding:"8px 14px", 
+    borderRadius:"8px", 
+    cursor:"pointer",
+    transition:"0.2s"
   },
 
-  backBtn: {
-    marginBottom:"20px",
-    padding:"10px 18px",
-    borderRadius:"10px",
-    border:"1px solid #ddd",
-    background:"#fff",
-    cursor:"pointer"
+  /* 🔥 CHECKOUT = SAME SIZE */
+  checkoutBtn:{ 
+    background:"linear-gradient(135deg,#4CAF50,#2e7d32)", 
+    color:"white", 
+    padding:"8px 14px",     // giống remove
+    border:"none", 
+    borderRadius:"8px",     // giống remove
+    cursor:"pointer",
+    fontSize:"14px",
+    fontWeight:"500",
+    transition:"0.2s"
   },
 
-  title: {
-    textAlign: "center",
-    marginBottom: "30px",
-    fontSize: "28px",
-    fontWeight: "700"
-  },
+  disabledBtn:{ background:"#ccc", cursor:"not-allowed" },
 
-  table: {
-    width: "100%",
-    borderCollapse: "separate",
-    borderSpacing: "0 10px"
-  },
+  footer:{ marginTop:"30px", display:"flex", justifyContent:"space-between", alignItems:"center" },
 
-  header: {
-    background: "#f5f5f5",
-    height: "50px"
-  },
+  total:{ color:"#e53935", fontWeight:"700", fontSize:"18px" },
 
-  row: {
-    textAlign: "center",
-    background: "#fff",
-    boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
-  },
+  empty:{ textAlign:"center", padding:"40px", opacity:0.5, color:"#999", fontSize:"18px" },
 
-  name: {
-    fontWeight: "600"
-  },
+  overlay:{ position:"fixed", top:0, left:0, width:"100%", height:"100%", background:"rgba(0,0,0,0.6)", display:"flex", justifyContent:"center", alignItems:"center" },
 
-  img: {
-    width: "70px",
-    height: "70px",
-    borderRadius: "10px",
-    objectFit: "cover"
-  },
+  modal:{ background:"#fff", padding:"25px", borderRadius:"16px", width:"100%", maxWidth:"820px", maxHeight:"70vh", overflowY:"auto" },
 
-  qty: {
-    background: "#eee",
-    padding: "6px 12px",
-    borderRadius: "12px"
-  },
+  modalTitle:{ fontWeight:"700", marginBottom:"20px", fontSize:"22px" },
 
-  amount: {
-    fontWeight: "700",
-    color: "#e53935"
-  },
+  section:{ marginBottom:"15px" },
 
-  removeBtn: {
-    background: "#ff4d4d",
-    border: "none",
-    color: "white",
-    padding: "8px 14px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
+  sectionTitle:{ fontWeight:"600", marginBottom:"8px" },
 
-  checkoutBtn: {
-    background: "linear-gradient(135deg,#4CAF50,#2e7d32)",
-    color: "white",
-    padding: "14px 26px",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer"
-  },
+  radio:{ display:"block", marginBottom:"5px" },
 
-  disabledBtn: {
-    background: "#ccc",
-    cursor: "not-allowed"
-  },
+  storeList:{ border:"1px solid #eee", padding:"10px", borderRadius:"8px", marginBottom:"10px" },
 
-  footer: {
-    marginTop: "30px",
-    display: "flex",
-    justifyContent: "space-between"
-  },
+  storeItem:{ display:"block", marginBottom:"6px" },
 
-  total: {
-    color: "#e53935",
-    fontWeight: "700"
-  },
+  label:{ fontWeight:"600", display:"block", marginBottom:"5px" },
 
-  empty: {
-    textAlign: "center",
-    padding: "40px"
-  },
+  required:{ color:"red" },
 
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.6)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
+  input:{ width:"100%", padding:"10px", marginBottom:"15px", borderRadius:"8px", border:"1px solid #ccc" },
 
-  modal: {
-    background: "#fff",
-    padding: "25px",
-    borderRadius: "16px",
-    width: "100%",
-    maxWidth: "820px",
-    maxHeight: "70vh",   // 🔥 GIỚI HẠN CHIỀU CAO
-  overflowY: "auto" 
-  },
+  qrBox:{ textAlign:"center", margin:"15px 0" },
 
-  modalTitle: {
-    fontWeight: "700",
-    marginBottom: "20px",
-    fontSize: "22px"
-  },
+  qr:{ width:"260px", borderRadius:"12px" },
 
-  section: {
-    marginBottom: "15px"
-  },
+  modalActions:{ display:"flex", justifyContent:"space-between" },
 
-  sectionTitle: {
-    fontWeight: "600",
-    marginBottom: "8px"
-  },
+  cancelBtn:{ background:"#ccc", padding:"10px 16px", border:"none", borderRadius:"8px", cursor:"pointer" },
 
-  radio: {
-    display: "block",
-    marginBottom: "5px"
-  },
-
-  storeList: {
-    border: "1px solid #eee",
-    padding: "10px",
-    borderRadius: "8px",
-    marginBottom: "10px"
-  },
-
-  storeItem: {
-    display: "block",
-    marginBottom: "6px"
-  },
-
-  label: {
-    fontWeight: "600",
-    display: "block",
-    marginBottom: "5px"
-  },
-
-  required: {
-    color: "red"
-  },
-
-  input: {
-    width: "100%",
-    padding: "10px",
-    marginBottom: "15px",
-    borderRadius: "8px",
-    border: "1px solid #ccc"
-  },
-
-  qrBox: {
-    textAlign: "center",
-    margin: "15px 0"
-  },
-
-  qr: {
-    width: "260px",
-    borderRadius: "12px"
-  },
-
-  modalActions: {
-    display: "flex",
-    justifyContent: "space-between"
-  },
-
-  cancelBtn: {
-    background: "#ccc",
-    padding: "10px 16px",
-    border: "none",
-    borderRadius: "8px"
-  },
-
-  confirmBtn: {
-    background: "#4CAF50",
-    color: "#fff",
-    padding: "10px 16px",
-    border: "none",
-    borderRadius: "8px"
-  }
+  confirmBtn:{ background:"#4CAF50", color:"#fff", padding:"10px 16px", border:"none", borderRadius:"8px", cursor:"pointer" }
 };
 
 export default withRouter(Mycart);

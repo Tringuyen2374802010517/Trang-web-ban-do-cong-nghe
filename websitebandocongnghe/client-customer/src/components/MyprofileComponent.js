@@ -41,7 +41,7 @@ class MyProfileComponent extends Component {
 
         <div style={styles.card}>
 
-          <h2 style={styles.title}>👤 My Profile</h2>
+          <h2 style={styles.title}>My Profile</h2>
 
           {/* Username */}
           <div style={styles.group}>
@@ -175,12 +175,13 @@ class MyProfileComponent extends Component {
 const styles = {
 
   page: {
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center",
-    minHeight:"80vh",
-    background:"#f5f6fa",
-    fontFamily:"Arial, sans-serif"
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "flex-start",   // 🔥 giống login
+  paddingTop: "120px",        // 🔥 đẩy xuống giữa
+  background: "#f5f6fa",
+  fontFamily: "Arial, sans-serif"
   },
 
   card: {

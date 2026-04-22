@@ -28,8 +28,7 @@ class Product extends Component {
       .then(res => {
         this.setState({ products: res.data.products || [] });
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
         this.setState({ products: [] });
       });
   }
@@ -38,30 +37,101 @@ class Product extends Component {
     this.setState({ itemSelected: item });
   }
 
+  // ================= STYLE =================
+  styles = {
+    container: {
+      display: 'flex',
+      gap: '20px',
+      padding: '20px',
+      background: 'linear-gradient(135deg,#0f2027,#203a43,#2c5364)',
+      minHeight: '100vh',
+      color: '#fff'
+    },
+
+    left: {
+      flex: 2,
+      background: 'rgba(255,255,255,0.08)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: '16px',
+      padding: '20px'
+    },
+
+    right: {
+      flex: 1,
+      background: 'rgba(255,255,255,0.08)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: '16px',
+      padding: '20px'
+    },
+
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse'
+    },
+
+    th: {
+      padding: '10px',
+      background: 'rgba(255,255,255,0.1)',
+      textAlign: 'left'
+    },
+
+    td: {
+      padding: '10px',
+      borderTop: '1px solid rgba(255,255,255,0.1)',
+      cursor: 'pointer'
+    },
+
+    img: {
+      width: '70px',
+      height: '70px',
+      borderRadius: '8px',
+      objectFit: 'cover'
+    },
+
+    badge: (show) => ({
+      padding: '4px 10px',
+      borderRadius: '10px',
+      fontSize: '12px',
+      background: show ? '#00c853' : '#d50000'
+    }),
+
+    rowSelected: {
+      background: 'rgba(255,255,255,0.2)'
+    }
+  };
+
   render() {
-    const rows = this.state.products.map(item => (
+    const { products, itemSelected } = this.state;
+
+    const rows = products.map(item => (
       <tr
         key={item._id}
         onClick={() => this.trItemClick(item)}
-        style={{ cursor: 'pointer' }}
+        style={{
+          ...(itemSelected?._id === item._id
+            ? this.styles.rowSelected
+            : {})
+        }}
       >
-        <td>{item._id}</td>
-        <td>{item.name}</td>
-        <td>{item.price}</td>
-        <td>{item.show ? 'Show' : 'Hide'}</td>
+        <td style={this.styles.td}>{item.name}</td>
+        <td style={this.styles.td}>{item.price}</td>
 
-        {}
-        <td>
+        <td style={this.styles.td}>
+          <span style={this.styles.badge(item.show)}>
+            {item.show ? 'SHOW' : 'HIDE'}
+          </span>
+        </td>
+
+        <td style={this.styles.td}>
           {item.categories_id?.map(c => c.name).join(', ')}
         </td>
 
-        {}
-        <td>
+        <td style={this.styles.td}>
           {item.images?.length > 0 ? (
             <img
+              style={this.styles.img}
               src={`http://localhost:3001/uploads/${item.images[0]}`}
-              width="80"
-              alt="product"
+              alt=""
             />
           ) : (
             'No image'
@@ -71,29 +141,32 @@ class Product extends Component {
     ));
 
     return (
-      <div style={{ display: 'flex', width: '100%' }}>
+      <div style={this.styles.container}>
         {/* LIST */}
-        <div>
-          <h2>PRODUCT LIST</h2>
-          <table border="1">
-            <tbody>
+        <div style={this.styles.left}>
+          <h2>Product List </h2>
+
+          <table style={this.styles.table}>
+            <thead>
               <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Categories</th>
-                <th>Image</th>
+                <th style={this.styles.th}>Name</th>
+                <th style={this.styles.th}>Price</th>
+                <th style={this.styles.th}>Status</th>
+                <th style={this.styles.th}>Categories</th>
+                <th style={this.styles.th}>Image</th>
               </tr>
-              {rows}
-            </tbody>
+            </thead>
+
+            <tbody>{rows}</tbody>
           </table>
         </div>
 
         {/* DETAIL */}
-        <div style={{ marginLeft: 'auto' }}>
+        <div style={this.styles.right}>
+          <h2>Product Detail</h2>
+
           <ProductDetail
-            item={this.state.itemSelected}
+            item={itemSelected}
             reload={() => this.apiGetProducts()}
           />
         </div>

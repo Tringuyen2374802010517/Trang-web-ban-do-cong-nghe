@@ -83,20 +83,15 @@ class ProductComponent extends Component {
         key={item._id}
         onClick={()=>this.props.router.navigate("/product/"+item._id)}
         style={styles.card}
-        onMouseEnter={e=>{
-          e.currentTarget.style.transform="translateY(-8px)";
-          e.currentTarget.style.boxShadow="0 20px 40px rgba(0,0,0,0.12)";
-        }}
-        onMouseLeave={e=>{
-          e.currentTarget.style.transform="translateY(0)";
-          e.currentTarget.style.boxShadow="0 8px 20px rgba(0,0,0,0.08)";
-        }}
+        className="product-card"
       >
-        <img
-          src={"http://localhost:3001/uploads/"+item.images[0]}
-          alt=""
-          style={styles.img}
-        />
+        <div style={styles.imageBox}>
+          <img
+            src={"http://localhost:3001/uploads/"+item.images[0]}
+            alt=""
+            style={styles.image}
+          />
+        </div>
 
         <h4 style={styles.name}>{item.name}</h4>
 
@@ -109,60 +104,112 @@ class ProductComponent extends Component {
 
   render(){
     return(
-      <div style={styles.wrapper}>
+      <div>
 
-        <h2 style={styles.title}>PRODUCTS</h2>
+        {/* 🔥 CONTENT WRAPPER */}
+        <div style={styles.wrapper}>
 
-        {/* FILTER */}
-        <div style={styles.filterWrap}>
+          <h2 style={styles.title}>PRODUCTS</h2>
 
-          <button
-            onClick={()=>this.setState({showFilter: !this.state.showFilter})}
-            style={styles.filterBtn}
-          >
-            ⚙ Filter
-          </button>
+          <div style={styles.filterWrap}>
 
-          {this.state.showFilter && (
-            <div style={styles.dropdown}>
+            <button
+              onClick={()=>this.setState({showFilter: !this.state.showFilter})}
+              style={styles.filterBtn}
+            >
+              ⚙ Filter
+            </button>
 
-              <div style={styles.groupTitle}>Sort</div>
+            {this.state.showFilter && (
+              <div style={styles.dropdown}>
 
-              <div onClick={()=>this.sortProducts("asc")} style={styles.option}>
-                ↑ Price: Low → High
+                <div style={styles.groupTitle}>Sort</div>
+
+                <div onClick={()=>this.sortProducts("asc")} style={styles.option}>
+                  ↑ Price: Low → High
+                </div>
+
+                <div onClick={()=>this.sortProducts("desc")} style={styles.option}>
+                  ↓ Price: High → Low
+                </div>
+
+                <div style={styles.groupTitle}>Filter by price</div>
+
+                <div onClick={()=>this.filterByPrice("under20")} style={styles.option}>
+                  Under 20 triệu
+                </div>
+
+                <div onClick={()=>this.filterByPrice("20to40")} style={styles.option}>
+                  20 → 40 triệu
+                </div>
+
+                <div onClick={()=>this.filterByPrice("over40")} style={styles.option}>
+                  Over 40 triệu
+                </div>
+
+                <div onClick={()=>this.resetFilter()} style={styles.reset}>
+                  Reset
+                </div>
+
               </div>
+            )}
 
-              <div onClick={()=>this.sortProducts("desc")} style={styles.option}>
-                ↓ Price: High → Low
-              </div>
+          </div>
 
-              <div style={styles.groupTitle}>Filter by price</div>
+          <div style={styles.grid}>
+            {this.renderProducts()}
+          </div>
 
-              <div onClick={()=>this.filterByPrice("under20")} style={styles.option}>
-                Under 20 triệu
-              </div>
+        </div>
 
-              <div onClick={()=>this.filterByPrice("20to40")} style={styles.option}>
-                20 → 40 triệu
-              </div>
-
-              <div onClick={()=>this.filterByPrice("over40")} style={styles.option}>
-                Over 40 triệu
-              </div>
-
-              <div onClick={()=>this.resetFilter()} style={styles.reset}>
-                Reset
-              </div>
-
+        {/* 🔥 FOOTER FULL WIDTH */}
+        <div style={styles.footer}>
+          <div style={styles.footerTop}>
+            <div style={styles.footerCol}>
+              <b>Shopping</b>
+              <p>MacBook</p>
+              <p>iPhone</p>
+              <p>iPad</p>
+              <p>AirPods</p>
+              <p>Apple Watch</p>
             </div>
-          )}
 
+            <div style={styles.footerCol}>
+              <b>Account</b>
+              <p>Apple ID</p>
+              <p>iCloud</p>
+            </div>
+
+            <div style={styles.footerCol}>
+              <b>Supporting</b>
+              <p>Help</p>
+              <p>Connect</p>
+            </div>
+
+            <div style={styles.footerCol}>
+              <b>Aount us</b>
+              <p>Introduction</p>
+              <p>Recruitment</p>
+            </div>
+          </div>
+
+          <div style={styles.footerBottom}>
+            © 2026 TECHDevices
+          </div>
         </div>
 
-        {/* GRID */}
-        <div style={styles.grid}>
-          {this.renderProducts()}
-        </div>
+        <style>
+          {`
+            .product-card:hover {
+              transform: translateY(-10px);
+              box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+            }
+
+            .product-card:hover img {
+              transform: scale(1.05);
+            }
+          `}
+        </style>
 
       </div>
     )
@@ -172,7 +219,7 @@ class ProductComponent extends Component {
 const styles = {
 
   wrapper:{
-    width:"92%",
+    width:"90%",
     margin:"auto",
     fontFamily:"-apple-system, BlinkMacSystemFont, sans-serif"
   },
@@ -218,8 +265,7 @@ const styles = {
 
   option:{
     padding:"12px 18px",
-    cursor:"pointer",
-    transition:"0.2s"
+    cursor:"pointer"
   },
 
   reset:{
@@ -230,42 +276,63 @@ const styles = {
   },
 
   grid:{
-    display:"flex",
-    flexWrap:"wrap",
-    justifyContent:"center"
+    display:"grid",
+    gridTemplateColumns:"repeat(auto-fit, minmax(250px, 1fr))",
+    gap:"25px",
+    padding:"0 20px"
   },
 
   card:{
-    width:"230px",
-    margin:"12px",
-    padding:"18px",
     background:"#fff",
-    borderRadius:"18px",
+    borderRadius:"20px",
+    padding:"20px",
     textAlign:"center",
     cursor:"pointer",
-    transition:"0.3s",
-    boxShadow:"0 8px 20px rgba(0,0,0,0.08)"
+    transition:"all 0.4s ease",
+    boxShadow:"0 6px 20px rgba(0,0,0,0.06)"
   },
 
-  img:{
-    width:"190px",
-    height:"190px",
-    objectFit:"cover",
-    borderRadius:"12px"
+  imageBox:{
+    height:"200px",
+    display:"flex",
+    alignItems:"center",
+    justifyContent:"center"
   },
 
-  name:{
-    fontSize:"14px",
-    marginTop:"10px",
-    minHeight:"40px"
+  image:{
+    maxWidth:"100%",
+    maxHeight:"100%",
+    objectFit:"contain",
+    transition:"0.4s"
   },
 
-  price:{
-    color:"#0071e3",
-    fontWeight:"bold",
-    marginTop:"5px"
+  name:{ marginTop:"10px", fontWeight:"600" },
+
+  price:{ color:"#1976d2", fontWeight:"bold" },
+
+  /* 🔥 FULL WIDTH */
+  footer:{
+    width:"100%",
+    background:"#f5f5f7",
+    padding:"40px 20px",
+    borderTop:"1px solid #ddd",
+    marginTop:"60px"
+  },
+
+  footerTop:{
+    display:"flex",
+    justifyContent:"center",
+    gap:"70px",
+    flexWrap:"wrap"
+  },
+
+  footerCol:{ minWidth:"150px" },
+
+  footerBottom:{
+    textAlign:"center",
+    marginTop:"20px",
+    fontSize:"13px"
   }
-
 };
 
 export default withRouter(ProductComponent);

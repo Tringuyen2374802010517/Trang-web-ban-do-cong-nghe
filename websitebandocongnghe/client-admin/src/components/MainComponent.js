@@ -17,20 +17,49 @@ class Main extends Component {
       return <Navigate to="/" replace />;
     }
 
+    const styles = {
+      container: {
+        display: 'flex',
+        height: '100vh',
+        background: 'linear-gradient(135deg,#0f2027,#203a43,#2c5364)',
+        fontFamily: 'Segoe UI'
+      },
+
+      // ❌ BỎ width cố định
+      sidebar: {
+        background: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(10px)',
+        borderRight: '1px solid rgba(255,255,255,0.1)',
+        transition: '0.3s'
+      },
+
+      content: {
+        flex: 1,
+        padding: '20px',
+        overflowY: 'auto',
+        color: '#fff'
+      }
+    };
+
     return (
-      <div className="body-admin">
-        <Menu />
+      <div style={styles.container}>
+        {/* SIDEBAR */}
+        <div style={styles.sidebar}>
+          <Menu />
+        </div>
 
-        <Routes>
-          <Route path="home" element={<Home />} />
-          <Route path="category" element={<Category />} />
-          <Route path="product" element={<Product />} />
-          <Route path="order" element={<Order />} />
-          <Route path="customer" element={<Customer />} />
+        {/* CONTENT */}
+        <div style={styles.content}>
+          <Routes>
+            <Route path="home" element={<Home />} />
+            <Route path="category" element={<Category />} />
+            <Route path="product" element={<Product />} />
+            <Route path="order" element={<Order />} />
+            <Route path="customer" element={<Customer />} />
 
-          {/* mặc định */}
-          <Route path="*" element={<Navigate to="home" />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="home" />} />
+          </Routes>
+        </div>
       </div>
     );
   }

@@ -9,8 +9,7 @@ class HomeComponent extends Component {
       newproducts: [],
       hotproducts: [],
       currentIndex: 0,
-      sliding: false,
-      showBanner: false
+      sliding: false
     };
   }
 
@@ -27,20 +26,25 @@ class HomeComponent extends Component {
 
     this.interval = setInterval(() => {
       if(this.state.newproducts.length > 0){
-
         this.setState({ sliding: true });
 
         setTimeout(() => {
           this.setState(prev => ({
-            currentIndex: (prev.currentIndex + 1) % prev.newproducts.length,
+            currentIndex: (prev.currentIndex + 1) % Math.min(6, prev.newproducts.length),
             sliding: false
           }));
-        }, 270); // delay nhỏ để tạo cảm giác inertia
-
+        }, 270);
       }
-    }, 3000); // chậm hơn → “thở”
+    }, 3000);
 
     window.addEventListener("scroll", this.handleScroll);
+
+    setTimeout(() => {
+      document.querySelectorAll(".cinema").forEach(el => {
+        el.classList.remove("show");
+      });
+      this.handleScroll();
+    }, 100);
   }
 
   componentWillUnmount(){
@@ -49,13 +53,18 @@ class HomeComponent extends Component {
   }
 
   handleScroll = () => {
-    if(window.scrollY > 300){
-      this.setState({ showBanner: true });
-    }
+    const elements = document.querySelectorAll(".cinema");
+
+    elements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 100) {
+        el.classList.add("show");
+      }
+    });
   };
 
   formatPrice(price){
-    return price?.toLocaleString('vi-VN') + "₫";
+    return price?.toLocaleString("vi-VN") + "₫";
   }
 
   renderProduct(item){
@@ -64,44 +73,47 @@ class HomeComponent extends Component {
         key={item._id}
         onClick={()=>window.location="/product/"+item._id}
         style={styles.card}
-        onMouseEnter={e=>{
-          e.currentTarget.style.transform="translateY(-6px)";
-          e.currentTarget.style.boxShadow="0 10px 25px rgba(0,0,0,0.1)";
-        }}
-        onMouseLeave={e=>{
-          e.currentTarget.style.transform="translateY(0)";
-          e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,0.05)";
-        }}
+        className="product-card"
       >
-        <img
-          src={"http://localhost:3001/uploads/"+item.images[0]}
-          alt=""
-          style={styles.image}
-        />
+        <div style={styles.imageBox}>
+          <img
+            src={"http://localhost:3001/uploads/"+item.images[0]}
+            alt=""
+            style={styles.image}
+          />
+        </div>
+
         <h4 style={styles.name}>{item.name}</h4>
+
+        <p style={styles.price}>
+          {this.formatPrice(item.price)}
+        </p>
       </div>
     );
   }
 
   render(){
-    const { newproducts, hotproducts, currentIndex, sliding, showBanner } = this.state;
-
-    const current = newproducts[currentIndex];
+    const { newproducts, hotproducts, currentIndex, sliding } = this.state;
+    const list = newproducts.slice(0,6);
+    const current = list[currentIndex];
 
     return(
       <div style={styles.container}>
 
-        <h2 style={styles.title}>NEW PRODUCTS</h2>
+        {/* BANNER */}
+        <div style={styles.banner}>
+          <img src="/4.jpg" style={styles.bannerImage} alt="" />
+        </div>
 
+        {/* SLIDER */}
         {current && (
           <div style={styles.slider}>
+            <div style={styles.sliderHeader}>NEW PRODUCTS</div>
 
             <div
               style={{
                 ...styles.sliderContent,
-                transform: sliding
-                  ? "translateX(-60px) scale(0.96)"
-                  : "translateX(0) scale(1)",
+                transform: sliding ? "translateX(-60px) scale(0.96)" : "translateX(0) scale(1)",
                 opacity: sliding ? 0 : 1
               }}
               onClick={()=>window.location="/product/"+current._id}
@@ -111,32 +123,189 @@ class HomeComponent extends Component {
                 alt=""
                 style={styles.sliderImage}
               />
-
-              <h3
-                style={{
-                  ...styles.sliderName,
-                  opacity: sliding ? 0 : 1,
-                  transform: sliding ? "translateY(10px)" : "translateY(0)"
-                }}
-              >
-                {current.name}
-              </h3>
+              <h3 style={styles.sliderName}>{current.name}</h3>
             </div>
-
           </div>
         )}
 
-        {showBanner && (
-          <div style={styles.banner}>
-            🔥 SALE 50% - Limited Time Offer 🔥
-          </div>
-        )}
-
+        {/* HOT PRODUCTS */}
         <h2 style={styles.title}>HOT PRODUCTS</h2>
 
         <div style={styles.grid}>
           {hotproducts.map(item => this.renderProduct(item))}
         </div>
+
+        {/* 🔥 GALLERY BACKGROUND ĐEN (BAO TOÀN BỘ) */}
+        <div style={{ background: "#000" }}>
+          {/* Video1 */}
+          <div className="cinema" style={styles.fullSection}>
+            <video src="/clip1.mp4" className="cinema-img" autoPlay loop muted playsInline/>
+            <div className="cinema-text1">Amazing Product</div>
+          </div>
+
+          {/* VIDEO2 */}
+          <div className="cinema" style={styles.fullSection}>
+            <video src="/clip2.mp4" className="cinema-img" autoPlay loop muted playsInline/>
+            <div className="cinema-text2">Premium Quality</div>
+          </div>
+
+          {/* HÌNH */}
+          <div className="cinema last" style={styles.fullSection}>
+            <img src="/3.jpg" className="cinema-img" alt="" />
+            <div className="cinema-text3">Next Generation</div>
+          </div>
+
+          {/* Video3 */}
+          <div className="cinema" style={styles.fullSection}>
+            <video src="/clip3.mp4" className="cinema-img" autoPlay loop muted playsInline/>
+            <div className="cinema-text4">Extremely Big
+            </div>
+          </div>
+
+          {/* Video4 */}
+          <div className="cinema" style={styles.fullSection}>
+            <video src="/clip4.mp4" className="cinema-img" autoPlay loop muted playsInline/>
+            <div className="cinema-text5">Absolute Cinema</div>
+          </div>
+
+          {/* Video5 */}
+          <div className="cinema" style={styles.fullSection}>
+            <video src="/clip5.mp4" className="cinema-img" autoPlay loop muted playsInline/>
+          </div>
+
+        </div>
+
+        {/* FOOTER */}
+        <div style={styles.footer}>
+          <div style={styles.footerTop}>
+            <div style={styles.footerCol}>
+              <b>Shopping</b>
+              <p>MacBook</p>
+              <p>iPhone</p>
+              <p>iPad</p>
+              <p>AirPods</p>
+              <p>Apple Watch</p>
+            </div>
+
+            <div style={styles.footerCol}>
+              <b>Account</b>
+              <p>Apple ID</p>
+              <p>iCloud</p>
+            </div>
+
+            <div style={styles.footerCol}>
+              <b>Supporting</b>
+              <p>Help</p>
+              <p>Connect</p>
+            </div>
+
+            <div style={styles.footerCol}>
+              <b>About us</b>
+              <p>Introduction</p>
+              <p>Recruitment</p>
+            </div>
+          </div>
+
+          <div style={styles.footerBottom}>
+            © 2026 TECHDevices
+          </div>
+        </div>
+
+        {/* CSS */}
+        <style>
+          {`
+            .cinema {
+              opacity: 0;
+              transform: translateY(80px);
+              transition: all 1s ease;
+              position: relative;
+              overflow: hidden;
+            }
+
+            .cinema.show {
+              opacity: 1;
+              transform: translateY(0);
+            }
+
+            .cinema-img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              background: #000;
+            }
+
+            /* 🔥 CHỈ SỬA CHỖ NÀY */
+            .cinema-text1 {
+              position: absolute;
+              top: 50%; /* DỜI XUỐNG */
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: white;
+              font-size: 50px;
+              font-weight: bold;
+              text-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            }
+            .cinema-text2 {
+              position: absolute;
+              top: 50%; /* DỜI XUỐNG */
+              left: 90%;
+              transform: translate(-50%, -50%);
+              color: white;
+              font-size: 50px;
+              font-weight: bold;
+              text-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            }
+            .cinema-text3 {
+              position: absolute;
+              top: 25%; /* DỜI XUỐNG */
+              left: 80%;
+              transform: translate(-50%, -50%);
+              color: white;
+              font-size:50px;
+              font-weight: bold;
+              text-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            }
+            .cinema-text4 {
+              position: absolute;
+              top: 30%; /* DỜI XUỐNG */
+              left: 15%;
+              transform: translate(-50%, -50%);
+              color: white;
+              font-size: 50px;
+              font-weight: bold;
+              text-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            }
+            .cinema-text5 {
+              position: absolute;
+              top: 80%; /* DỜI XUỐNG */
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: white;
+              font-size: 50px;
+              font-weight: bold;
+              text-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            }
+
+            .cinema.last::after {
+              content: "";
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              height: 80px;
+              background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+              z-index: 2;
+            }
+
+            .product-card:hover {
+              transform: translateY(-10px);
+              box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+            }
+
+            .product-card:hover img {
+              transform: scale(1.05);
+            }
+          `}
+        </style>
 
       </div>
     );
@@ -144,99 +313,26 @@ class HomeComponent extends Component {
 }
 
 const styles = {
-
-  container:{
-    width:"95%",
-    margin:"auto",
-    fontFamily:"-apple-system, BlinkMacSystemFont, sans-serif",
-    background:"#f5f5f7",
-    minHeight:"100vh",
-    borderRadius:"15px"
-  },
-
-  title:{
-    textAlign:"center",
-    marginTop:"40px",
-    marginBottom:"20px",
-    color:"#1d1d1f",
-    fontWeight:"600"
-  },
-
-  slider:{
-    position:"relative",
-    height:"380px",
-    background:"#fff",
-    borderRadius:"20px",
-    overflow:"hidden",
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center",
-    boxShadow:"0 4px 20px rgba(0,0,0,0.05)"
-  },
-
-  sliderContent:{
-    textAlign:"center",
-    cursor:"pointer",
-    transition:"all 1.4s cubic-bezier(0.22, 1, 0.36, 1)"
-  },
-
-  sliderImage:{
-    width:"300px",
-    height:"300px",
-    objectFit:"cover",
-    borderRadius:"15px",
-    transition:"all 1.4s cubic-bezier(0.22, 1, 0.36, 1)"
-  },
-
-  sliderName:{
-    marginTop:"15px",
-    color:"#1d1d1f",
-    fontWeight:"500",
-    transition:"all 1.6s cubic-bezier(0.22, 1, 0.36, 1)"
-  },
-
-  grid:{
-    display:"flex",
-    flexWrap:"wrap",
-    justifyContent:"center"
-  },
-
-  card:{
-    width:"220px",
-    margin:"12px",
-    padding:"15px",
-    background:"#fff",
-    borderRadius:"15px",
-    textAlign:"center",
-    cursor:"pointer",
-    transition:"0.3s",
-    boxShadow:"0 4px 12px rgba(0,0,0,0.05)"
-  },
-
-  image:{
-    width:"180px",
-    height:"180px",
-    objectFit:"cover",
-    borderRadius:"10px"
-  },
-
-  name:{
-    fontSize:"14px",
-    marginTop:"10px",
-    color:"#1d1d1f"
-  },
-
-  banner:{
-    marginTop:"40px",
-    padding:"20px",
-    textAlign:"center",
-    background:"#0071e3",
-    color:"#fff",
-    borderRadius:"15px",
-    fontWeight:"bold",
-    fontSize:"18px"
-  }
-
+  container:{ width:"100%", background:"#f5f5f7" },
+  title:{ textAlign:"center", margin:"40px 0", fontSize:"28px", fontWeight:"600" },
+  banner:{ width:"100%" },
+  bannerImage:{ width:"100%", height:"350px", objectFit:"cover", borderRadius:"20px" },
+  slider:{ height:"460px", background:"#fff", display:"flex", flexDirection:"column", alignItems:"center", paddingTop:"10px" },
+  sliderHeader:{ fontSize:"30px", fontWeight:"bold", marginBottom:"20px" },
+  sliderContent:{ textAlign:"center", transition:"1s" },
+  sliderImage:{ width:"300px", height:"300px", objectFit:"cover", borderRadius:"20px" },
+  sliderName:{ marginTop:"15px" },
+  grid:{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(250px, 1fr))", gap:"25px", padding:"0 20px" },
+  card:{ background:"#fff", borderRadius:"20px", padding:"20px", textAlign:"center", cursor:"pointer", transition:"all 0.4s ease", boxShadow:"0 6px 20px rgba(0,0,0,0.06)" },
+  imageBox:{ height:"200px", display:"flex", alignItems:"center", justifyContent:"center" },
+  image:{ maxWidth:"100%", maxHeight:"100%", objectFit:"contain", transition:"0.4s" },
+  name:{ marginTop:"10px", fontWeight:"600" },
+  price:{ color:"#1976d2", fontWeight:"bold" },
+  fullSection:{ width:"100%", height:"100vh", position:"relative" },
+  footer:{ background:"#646466", padding:"40px 20px", borderTop:"1px solid #646466", marginTop:"0px" },
+  footerTop:{ display:"flex", justifyContent:"center", gap:"70px", flexWrap:"wrap" },
+  footerCol:{ minWidth:"150px" },
+  footerBottom:{ textAlign:"center", marginTop:"20px", fontSize:"13px" }
 };
 
 export default HomeComponent;

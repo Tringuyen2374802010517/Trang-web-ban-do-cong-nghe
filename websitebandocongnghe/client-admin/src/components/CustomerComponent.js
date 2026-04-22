@@ -16,7 +16,6 @@ class Customer extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('admin_token');
-
     if (token) {
       this.apiGetCustomers();
     }
@@ -34,73 +33,47 @@ class Customer extends Component {
 
   // ================= API =================
   apiGetCustomers = () => {
-    const token = this.context.token || localStorage.getItem('admin_token');
+    const token = localStorage.getItem('admin_token'); // 🔥 FIX
+
     if (!token) return;
 
-    const config = {
+    axios.get('/api/admin/customers', {
       headers: { 'x-access-token': token }
-    };
-
-    axios.get('/api/admin/customers', config)
-      .then(res => {
-        this.setState({ customers: res.data });
-      })
-      .catch(err => {
-        console.error("GET CUSTOMERS ERROR:", err);
-      });
+    })
+    .then(res => {
+      this.setState({ customers: res.data });
+    })
+    .catch(err => console.error(err));
   };
 
   apiGetOrdersByCustID = (cid) => {
-    const token = this.context.token || localStorage.getItem('admin_token');
-    if (!token) return;
+    const token = localStorage.getItem('admin_token'); // 🔥 FIX
 
-    const config = {
+    axios.get('/api/admin/orders/customer/' + cid, {
       headers: { 'x-access-token': token }
-    };
-
-    axios.get('/api/admin/orders/customer/' + cid, config)
-      .then(res => {
-        this.setState({ orders: res.data });
-      })
-      .catch(err => {
-        console.error("GET ORDERS ERROR:", err);
-      });
+    })
+    .then(res => {
+      this.setState({ orders: res.data });
+    })
+    .catch(err => console.error(err));
   };
 
-  apiPutCustomerDeactive = (id, token) => {
-    const t = this.context.token || localStorage.getItem('admin_token');
-    if (!t) return;
+  apiPutCustomerDeactive = (id) => {
+    const token = localStorage.getItem('admin_token'); // 🔥 FIX
 
-    const config = {
-      headers: { 'x-access-token': t }
-    };
-
-    axios.put('/api/admin/customers/deactive/' + id, { token }, config)
-      .then(res => {
-        if (res.data) {
-          this.apiGetCustomers();
-        }
-      })
-      .catch(err => {
-        console.error("DEACTIVE ERROR:", err);
-      });
+    axios.put('/api/admin/customers/deactive/' + id, {}, {
+      headers: { 'x-access-token': token }
+    })
+    .then(() => this.apiGetCustomers());
   };
 
   apiSendMail = (id) => {
-    const token = this.context.token || localStorage.getItem('admin_token');
-    if (!token) return;
+    const token = localStorage.getItem('admin_token'); // 🔥 FIX
 
-    const config = {
+    axios.get('/api/admin/customers/sendmail/' + id, {
       headers: { 'x-access-token': token }
-    };
-
-    axios.get('/api/admin/customers/sendmail/' + id, config)
-      .then(res => {
-        alert(res.data.message);
-      })
-      .catch(err => {
-        console.error("SEND MAIL ERROR:", err);
-      });
+    })
+    .then(res => alert(res.data.message));
   };
 
   // ================= EVENT =================
@@ -113,120 +86,206 @@ class Customer extends Component {
     this.setState({ order: item });
   };
 
-  // ================= RENDER =================
+  // ================= UI STYLE =================
+  styles = {
+    container: {
+      padding: '30px',
+      background: 'linear-gradient(135deg,#0f2027,#203a43,#2c5364)',
+      minHeight: '100vh',
+      color: '#fff',
+      fontFamily: 'Segoe UI'
+    },
+
+    card: {
+      background: 'rgba(255,255,255,0.08)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: '16px',
+      padding: '20px',
+      marginBottom: '20px'
+    },
+
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse'
+    },
+
+    th: {
+      padding: '10px',
+      background: 'rgba(255,255,255,0.1)',
+      textAlign: 'left'
+    },
+
+    td: {
+      padding: '10px',
+      borderTop: '1px solid rgba(255,255,255,0.1)',
+      cursor: 'pointer'
+    },
+
+    badgeActive: {
+      color: '#00e676',
+      fontWeight: 'bold'
+    },
+
+    badgeInactive: {
+      color: '#ff5252',
+      fontWeight: 'bold'
+    },
+
+    actionBlue: {
+      color: '#40c4ff',
+      cursor: 'pointer'
+    },
+
+    actionRed: {
+      color: '#ff5252',
+      cursor: 'pointer'
+    },
+
+    img: {
+      width: '60px',
+      height: '60px',
+      borderRadius: '8px'
+    }
+  };
+
   render() {
-
-    const customers = this.state.customers.map(item => (
-      <tr key={item._id} onClick={() => this.trCustomerClick(item)}>
-        <td>{item._id}</td>
-        <td>{item.username}</td>
-        <td>{item.name}</td>
-        <td>{item.email}</td>
-        <td>{item.active}</td>
-        <td>
-          {item.active === 0 ? (
-            <span style={{color:'blue', cursor:'pointer'}}
-              onClick={(e) => { e.stopPropagation(); this.apiSendMail(item._id); }}>
-              EMAIL
-            </span>
-          ) : (
-            <span style={{color:'red', cursor:'pointer'}}
-              onClick={(e) => { e.stopPropagation(); this.apiPutCustomerDeactive(item._id, item.token); }}>
-              DEACTIVE
-            </span>
-          )}
-        </td>
-      </tr>
-    ));
-
-    const orders = this.state.orders.map(item => (
-      <tr key={item._id} onClick={() => this.trOrderClick(item)}>
-        <td>{item._id}</td>
-        <td>{new Date(item.cdate).toLocaleString()}</td>
-        <td>{item.customer?.name}</td>
-        <td>{item.customer?.phone}</td>
-        <td>{item.total}</td>
-        <td>{item.status}</td>
-      </tr>
-    ));
+    const { customers, orders, order } = this.state;
 
     return (
-      <div>
-        <h2>CUSTOMER LIST</h2>
+      <div style={this.styles.container}>
 
-        <table border="1">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Username</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Active</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>{customers}</tbody>
-        </table>
+        {/* CUSTOMER */}
+        <div style={this.styles.card}>
+          <h2>Customers</h2>
 
-        {/* ORDER LIST */}
-        {this.state.orders.length > 0 && (
-          <div>
-            <h2>ORDER LIST</h2>
-            <table border="1">
+          <table style={this.styles.table}>
+            <thead>
+              <tr>
+                <th style={this.styles.th}>ID</th>
+                <th style={this.styles.th}>Username</th>
+                <th style={this.styles.th}>Name</th>
+                <th style={this.styles.th}>Email</th>
+                <th style={this.styles.th}>Status</th>
+                <th style={this.styles.th}>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {customers.map(item => (
+                <tr key={item._id} onClick={() => this.trCustomerClick(item)}>
+                  <td style={this.styles.td}>{item._id}</td>
+                  <td style={this.styles.td}>{item.username}</td>
+                  <td style={this.styles.td}>{item.name}</td>
+                  <td style={this.styles.td}>{item.email}</td>
+
+                  <td style={this.styles.td}>
+                    {item.active === 1
+                      ? <span style={this.styles.badgeActive}>ACTIVE</span>
+                      : <span style={this.styles.badgeInactive}>INACTIVE</span>}
+                  </td>
+
+                  <td style={this.styles.td}>
+                    {item.active === 0 ? (
+                      <span
+                        style={this.styles.actionBlue}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          this.apiSendMail(item._id);
+                        }}>
+                        EMAIL
+                      </span>
+                    ) : (
+                      <span
+                        style={this.styles.actionRed}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          this.apiPutCustomerDeactive(item._id);
+                        }}>
+                        DEACTIVE
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* ORDERS */}
+        {orders.length > 0 && (
+          <div style={this.styles.card}>
+            <h2>Orders</h2>
+
+            <table style={this.styles.table}>
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Date</th>
-                  <th>Name</th>
-                  <th>Phone</th>
-                  <th>Total</th>
-                  <th>Status</th>
+                  <th style={this.styles.th}>ID</th>
+                  <th style={this.styles.th}>Date</th>
+                  <th style={this.styles.th}>Name</th>
+                  <th style={this.styles.th}>Phone</th>
+                  <th style={this.styles.th}>Total</th>
+                  <th style={this.styles.th}>Status</th>
                 </tr>
               </thead>
-              <tbody>{orders}</tbody>
+
+              <tbody>
+                {orders.map(item => (
+                  <tr key={item._id} onClick={() => this.trOrderClick(item)}>
+                    <td style={this.styles.td}>{item._id}</td>
+                    <td style={this.styles.td}>{new Date(item.cdate).toLocaleString()}</td>
+                    <td style={this.styles.td}>{item.customer?.name}</td>
+                    <td style={this.styles.td}>{item.customer?.phone}</td>
+                    <td style={this.styles.td}>{item.total}</td>
+                    <td style={this.styles.td}>{item.status}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
         )}
 
         {/* ORDER DETAIL */}
-        {this.state.order && (
-          <div>
-            <h2>ORDER DETAIL</h2>
-            <table border="1">
+        {order && (
+          <div style={this.styles.card}>
+            <h2>Order Detail</h2>
+
+            <table style={this.styles.table}>
               <thead>
                 <tr>
-                  <th>No.</th>
-                  <th>Prod.ID</th>
-                  <th>Prod.name</th>
-                  <th>Image</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Amount</th>
+                  <th style={this.styles.th}>No.</th>
+                  <th style={this.styles.th}>Prod.ID</th>
+                  <th style={this.styles.th}>Prod.name</th>
+                  <th style={this.styles.th}>Image</th>
+                  <th style={this.styles.th}>Price</th>
+                  <th style={this.styles.th}>Quantity</th>
+                  <th style={this.styles.th}>Amount</th>
                 </tr>
               </thead>
+
               <tbody>
-                {this.state.order.items.map((item, index) => (
+                {order.items.map((item, index) => (
                   <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{item.product?._id}</td>
-                    <td>{item.product?.name}</td>
-                    <td>
+                    <td style={this.styles.td}>{index + 1}</td>
+                    <td style={this.styles.td}>{item.product?._id}</td>
+                    <td style={this.styles.td}>{item.product?.name}</td>
+
+                    <td style={this.styles.td}>
                       <img
+                        style={this.styles.img}
                         src={
                           item.product?.image
                             ? "http://localhost:3001/uploads/" + item.product.image
-                            : item.product?.images && item.product.images.length > 0
+                            : item.product?.images?.length > 0
                             ? "http://localhost:3001/uploads/" + item.product.images[0]
                             : ""
                         }
-                        width="70"
-                        height="70"
                         alt=""
                       />
                     </td>
-                    <td>{item.product?.price}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.product?.price * item.quantity}</td>
+
+                    <td style={this.styles.td}>{item.product?.price}</td>
+                    <td style={this.styles.td}>{item.quantity}</td>
+                    <td style={this.styles.td}>{item.product?.price * item.quantity}</td>
                   </tr>
                 ))}
               </tbody>

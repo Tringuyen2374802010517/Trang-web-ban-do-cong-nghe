@@ -100,7 +100,7 @@ class Myorders extends Component {
       <div style={styles.container}>
 
         {/* ORDER LIST */}
-        <h2 style={styles.title}>📦 Order List</h2>
+        <h2 style={styles.title}>Order List</h2>
 
         <table style={styles.table}>
           <thead>
@@ -120,47 +120,46 @@ class Myorders extends Component {
         {selectedOrder && (
           <div style={{ marginTop: "35px" }}>
 
-            <h2 style={styles.title}>🧾 Order Detail</h2>
+            <h2 style={styles.title}>Order Detail</h2>
 
-            {/* 🔥 FIX CHUẨN LOGIC HIỂN THỊ */}
             <div style={styles.infoBox}>
 
               {/* DELIVERY TYPE */}
               <p>
-                <b>Hình thức giao hàng:</b>{" "}
+                <b>Delivery method:</b>{" "}
                 {selectedOrder.deliveryType === "delivery"
-                  ? "Giao tận nơi"
-                  : "Nhận tại cửa hàng"}
+                  ? "Home delivery"
+                  : "Store pickup"}
               </p>
 
               {/* ADDRESS */}
               {selectedOrder.deliveryType === "delivery" && selectedOrder.address && (
                 <p>
-                  <b>Địa chỉ:</b> {selectedOrder.address}
+                  <b>Address:</b> {selectedOrder.address}
                 </p>
               )}
 
               {/* STORE */}
               {selectedOrder.deliveryType === "store" && selectedOrder.selectedStore && (
                 <p>
-                  <b>Nhận tại cửa hàng:</b> {selectedOrder.selectedStore}
+                  <b>Pickup at store:</b> {selectedOrder.selectedStore}
                 </p>
               )}
 
               {/* PAYMENT */}
               <p>
-                <b>Thanh toán:</b>{" "}
+                <b>Payment method:</b>{" "}
                 {selectedOrder.paymentMethod === "cod"
-                  ? "Tiền mặt"
+                  ? "Cash"
                   : selectedOrder.paymentMethod === "bank"
-                  ? "Chuyển khoản"
+                  ? "Bank transfer"
                   : ""}
               </p>
 
-              {/* NOTE (MỚI THÊM) */}
+              {/* NOTE */}
               {selectedOrder.note && (
                 <p>
-                  <b>Ghi chú:</b> {selectedOrder.note}
+                  <b>Note:</b> {selectedOrder.note}
                 </p>
               )}
 

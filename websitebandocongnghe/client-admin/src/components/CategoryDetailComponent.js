@@ -21,7 +21,7 @@ class CategoryDetail extends Component {
     const config = { headers: { 'x-access-token': this.context.token } };
     axios.post('/api/admin/categories', { name: this.state.txtName }, config)
       .then(() => {
-        alert('OK');
+        alert('Added successfully!');
         this.props.reload();
       });
   };
@@ -32,7 +32,7 @@ class CategoryDetail extends Component {
     axios.put(`/api/admin/categories/${this.state.txtID}`,
       { name: this.state.txtName }, config)
       .then(() => {
-        alert('OK');
+        alert('Updated successfully!');
         this.props.reload();
       });
   };
@@ -43,22 +43,119 @@ class CategoryDetail extends Component {
     const config = { headers: { 'x-access-token': this.context.token } };
     axios.delete(`/api/admin/categories/${this.state.txtID}`, config)
       .then(() => {
-        alert('OK');
+        alert('Deleted successfully!');
         this.props.reload();
       });
   };
 
   render() {
-    return (
-      <div>
-        <h2>CATEGORY DETAIL</h2>
-        ID <input value={this.state.txtID} readOnly /><br/>
-        Name <input value={this.state.txtName}
-          onChange={e => this.setState({ txtName: e.target.value })} /><br/>
+    const styles = {
+      container: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)',
+        fontFamily: 'Segoe UI',
+        color: '#fff'
+      },
 
-        <button onClick={this.add}>ADD NEW</button>
-        <button onClick={this.update}>UPDATE</button>
-        <button onClick={this.delete}>DELETE</button>
+      card: {
+        background: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(12px)',
+        padding: '40px',
+        borderRadius: '20px',
+        width: '400px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+      },
+
+      title: {
+        textAlign: 'center',
+        marginBottom: '25px'
+      },
+
+      label: {
+        fontSize: '14px',
+        marginBottom: '5px',
+        display: 'block'
+      },
+
+      input: {
+        width: '100%',
+        padding: '10px',
+        borderRadius: '8px',
+        border: 'none',
+        marginBottom: '15px',
+        outline: 'none'
+      },
+
+      button: {
+        padding: '10px',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        width: '100%',
+        marginTop: '10px'
+      },
+
+      addBtn: {
+        background: '#00c853',
+        color: '#fff'
+      },
+
+      updateBtn: {
+        background: '#ffab00',
+        color: '#000'
+      },
+
+      deleteBtn: {
+        background: '#d50000',
+        color: '#fff'
+      }
+    };
+
+    return (
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>📂 Category Detail</h2>
+
+          <label style={styles.label}>ID</label>
+          <input
+            style={styles.input}
+            value={this.state.txtID}
+            readOnly
+          />
+
+          <label style={styles.label}>Name</label>
+          <input
+            style={styles.input}
+            value={this.state.txtName}
+            onChange={e => this.setState({ txtName: e.target.value })}
+            placeholder="Enter category name..."
+          />
+
+          <button
+            style={{ ...styles.button, ...styles.addBtn }}
+            onClick={this.add}
+          >
+            ADD NEW
+          </button>
+
+          <button
+            style={{ ...styles.button, ...styles.updateBtn }}
+            onClick={this.update}
+          >
+            UPDATE
+          </button>
+
+          <button
+            style={{ ...styles.button, ...styles.deleteBtn }}
+            onClick={this.delete}
+          >
+            DELETE
+          </button>
+        </div>
       </div>
     );
   }

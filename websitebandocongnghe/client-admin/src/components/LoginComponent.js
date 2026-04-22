@@ -34,7 +34,6 @@ class Login extends Component {
         alert(res.data.message);
       }
     } catch (err) {
-      console.error(err);
       alert('Login failed');
     }
   };
@@ -44,27 +43,90 @@ class Login extends Component {
       return <Navigate to="/admin" replace />;
     }
 
+    const styles = {
+      container: {
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)',
+        fontFamily: 'Segoe UI'
+      },
+
+      card: {
+        background: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(12px)',
+        padding: '40px',
+        borderRadius: '20px',
+        width: '350px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+        color: '#fff',
+        textAlign: 'center',
+        animation: 'fadeIn 0.8s ease'
+      },
+
+      title: {
+        marginBottom: '20px'
+      },
+
+      input: {
+        width: '100%',
+        padding: '12px',
+        marginBottom: '15px',
+        borderRadius: '10px',
+        border: 'none',
+        outline: 'none'
+      },
+
+      button: {
+        width: '100%',
+        padding: '12px',
+        borderRadius: '10px',
+        border: 'none',
+        background: '#00c853',
+        color: '#fff',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        transition: '0.3s'
+      }
+    };
+
     return (
-      <div className="login-container">
-        <h2>ADMIN LOGIN</h2>
-        <form>
-          <input
-            type="text"
-            placeholder="Username"
-            value={this.state.txtUsername}
-            onChange={e => this.setState({ txtUsername: e.target.value })}
-          />
+      <div style={styles.container}>
+        <style>
+          {`
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(20px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+          `}
+        </style>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={this.state.txtPassword}
-            onChange={e => this.setState({ txtPassword: e.target.value })}
-          />
+        <div style={styles.card}>
+          <h2 style={styles.title}>🔐 Admin Login</h2>
 
-          <br />
-          <button onClick={this.btnLoginClick}>LOGIN</button>
-        </form>
+          <form>
+            <input
+              style={styles.input}
+              type="text"
+              placeholder="Username"
+              value={this.state.txtUsername}
+              onChange={e => this.setState({ txtUsername: e.target.value })}
+            />
+
+            <input
+              style={styles.input}
+              type="password"
+              placeholder="Password"
+              value={this.state.txtPassword}
+              onChange={e => this.setState({ txtPassword: e.target.value })}
+            />
+
+            <button style={styles.button} onClick={this.btnLoginClick}>
+              LOGIN
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
