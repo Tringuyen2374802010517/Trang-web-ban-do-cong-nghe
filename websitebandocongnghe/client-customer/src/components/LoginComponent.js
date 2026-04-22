@@ -30,7 +30,7 @@ class LoginComponent extends Component {
       password: this.state.txtPassword
     };
 
-    axios.post("http://localhost:3001/api/customer/login", account)
+    axios.post("/api/customer/login", account)   // 🔥 FIX DUY NHẤT
 
       .then(res => {
         const result = res.data;

@@ -38,7 +38,7 @@ class Customer extends Component {
     if (!token) return;
 
     axios.get('/api/admin/customers', {
-      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
+      headers: { Authorization: 'Bearer ' + token }
     })
     .then(res => {
       this.setState({ customers: res.data });
@@ -50,7 +50,7 @@ class Customer extends Component {
     const token = localStorage.getItem('admin_token');
 
     axios.get('/api/admin/orders/customer/' + cid, {
-      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
+      headers: { Authorization: 'Bearer ' + token }
     })
     .then(res => {
       this.setState({ orders: res.data });
@@ -62,17 +62,17 @@ class Customer extends Component {
     const token = localStorage.getItem('admin_token');
 
     axios.put('/api/admin/customers/deactive/' + id, {}, {
-      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
+      headers: { Authorization: 'Bearer ' + token }
     })
     .then(() => this.apiGetCustomers())
-    .catch(err => console.error(err)); // thêm để debug
+    .catch(err => console.error(err));
   };
 
   apiSendMail = (id) => {
     const token = localStorage.getItem('admin_token');
 
     axios.get('/api/admin/customers/sendmail/' + id, {
-      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
+      headers: { Authorization: 'Bearer ' + token }
     })
     .then(res => alert(res.data.message))
     .catch(err => console.error(err));
@@ -276,9 +276,9 @@ class Customer extends Component {
                         style={this.styles.img}
                         src={
                           item.product?.image
-                            ? "http://localhost:3001/uploads/" + item.product.image
+                            ? "/uploads/" + item.product.image
                             : item.product?.images?.length > 0
-                            ? "http://localhost:3001/uploads/" + item.product.images[0]
+                            ? "/uploads/" + item.product.images[0]
                             : ""
                         }
                         alt=""

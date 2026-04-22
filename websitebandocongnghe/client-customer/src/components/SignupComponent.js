@@ -36,8 +36,8 @@ class SignupComponent extends Component {
         break;
 
       case "txtPhone":
-        !/^[0-9]{10}$/.test(value)   // 🔥 CHỈ SỬA DÒNG NÀY
-          ? errors.phone = "The phone number must be exactly 10 digits."  // 🔥 sửa message
+        !/^[0-9]{10}$/.test(value)
+          ? errors.phone = "The phone number must be exactly 10 digits."
           : delete errors.phone;
         break;
 
@@ -90,7 +90,7 @@ class SignupComponent extends Component {
       email: this.state.txtEmail
     };
 
-    axios.post("http://localhost:3001/api/customer/signup", account)
+    axios.post("/api/customer/signup", account)   // 🔥 FIX
       .then((res) => {
 
         const msg = res.data.message || "";
@@ -160,7 +160,7 @@ class SignupComponent extends Component {
             {this.renderInput("Username","txtUsername","text","Enter username...","username")}
             {this.renderInput("Password","txtPassword","password","At least 6 chars","password")}
             {this.renderInput("Name","txtName","text","Minimum 8 characters","name")}
-            {this.renderInput("Phone","txtPhone","text","10 digits only","phone")} {/* 🔥 sửa placeholder */}
+            {this.renderInput("Phone","txtPhone","text","10 digits only","phone")}
             {this.renderInput("Email","txtEmail","text","example@gmail.com","email")}
 
             <button

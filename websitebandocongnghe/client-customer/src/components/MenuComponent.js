@@ -13,7 +13,7 @@ class MenuComponent extends Component {
   }
 
   componentDidMount(){
-    axios.get("http://localhost:3001/api/customer/categories")
+    axios.get("/api/customer/categories")   // 🔥 FIX DUY NHẤT
     .then(res=>{
       this.setState({categories: res.data})
     })
@@ -101,7 +101,7 @@ class MenuComponent extends Component {
 const styles = {
 
   navbar: {
-    position: "sticky", // 🔥 CHỈ SỬA DÒNG NÀY
+    position: "sticky",
     top: 0,
     width:"100%",
     background:"#94AAD6",

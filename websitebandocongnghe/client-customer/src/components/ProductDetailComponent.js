@@ -37,7 +37,7 @@ class ProductDetailComponent extends Component {
     const id = this.props.router.params.id;
 
     axios
-    .get("http://localhost:3001/api/customer/products/"+id)
+    .get("/api/customer/products/"+id)   // 🔥 FIX
     .then(res=>{
       this.setState({product: res.data})
     });
@@ -45,7 +45,7 @@ class ProductDetailComponent extends Component {
 
   apiGetRelatedProducts(){
     axios
-      .get("http://localhost:3001/api/customer/products")
+      .get("/api/customer/products")   // 🔥 FIX (bị sai http:///)
       .then(res=>{
         const all = res.data;
 
@@ -83,7 +83,7 @@ class ProductDetailComponent extends Component {
 
           <div style={styles.left}>
             <img
-              src={"http://localhost:3001/uploads/"+p.images[0]}
+              src={"/uploads/"+p.images[0]}   // 🔥 FIX
               alt=""
               style={styles.img}
             />
@@ -228,7 +228,7 @@ class ProductDetailComponent extends Component {
                 }}
               >
                 <img
-                  src={"http://localhost:3001/uploads/"+item.images[0]}
+                  src={"/uploads/"+item.images[0]}   // 🔥 FIX
                   alt=""
                   style={styles.relatedImg}
                 />

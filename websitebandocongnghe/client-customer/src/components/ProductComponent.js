@@ -28,7 +28,7 @@ class ProductComponent extends Component {
     const keyword = this.props.router.params.keyword;
 
     if(cid){
-      axios.get("http://localhost:3001/api/customer/products/category/"+cid)
+      axios.get("/api/customer/products/category/"+cid)   // 🔥 FIX
       .then(res=>{
         this.setState({
           products: res.data,
@@ -38,7 +38,7 @@ class ProductComponent extends Component {
     }
 
     if(keyword){
-      axios.get("http://localhost:3001/api/customer/products/search/"+keyword)
+      axios.get("/api/customer/products/search/"+keyword) // 🔥 FIX
       .then(res=>{
         this.setState({
           products: res.data,
@@ -87,7 +87,7 @@ class ProductComponent extends Component {
       >
         <div style={styles.imageBox}>
           <img
-            src={"http://localhost:3001/uploads/"+item.images[0]}
+            src={"/uploads/"+item.images[0]}   // 🔥 FIX
             alt=""
             style={styles.image}
           />
@@ -106,7 +106,6 @@ class ProductComponent extends Component {
     return(
       <div>
 
-        {/* 🔥 CONTENT WRAPPER */}
         <div style={styles.wrapper}>
 
           <h2 style={styles.title}>PRODUCTS</h2>
@@ -162,7 +161,6 @@ class ProductComponent extends Component {
 
         </div>
 
-        {/* 🔥 FOOTER FULL WIDTH */}
         <div style={styles.footer}>
           <div style={styles.footerTop}>
             <div style={styles.footerCol}>
@@ -310,7 +308,6 @@ const styles = {
 
   price:{ color:"#1976d2", fontWeight:"bold" },
 
-  /* 🔥 FULL WIDTH */
   footer:{
     width:"100%",
     background:"#f5f5f7",

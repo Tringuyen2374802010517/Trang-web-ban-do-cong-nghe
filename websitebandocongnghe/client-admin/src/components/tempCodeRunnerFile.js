@@ -59,7 +59,7 @@ class Product extends Component {
         <td>
           {item.images?.length > 0 ? (
             <img
-              src={`http://localhost:3001/uploads/${item.images[0]}`}
+              src={`/uploads/${item.images[0]}`}   // 🔥 FIX DUY NHẤT
               width="80"
               alt="product"
             />

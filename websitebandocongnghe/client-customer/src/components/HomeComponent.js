@@ -14,12 +14,12 @@ class HomeComponent extends Component {
   }
 
   componentDidMount(){
-    axios.get("http://localhost:3001/api/customer/products/new")
+    axios.get("/api/customer/products/new") // 🔥 FIX
     .then(res => {
       this.setState({ newproducts: res.data });
     });
 
-    axios.get("http://localhost:3001/api/customer/products/hot")
+    axios.get("/api/customer/products/hot") // 🔥 FIX
     .then(res => {
       this.setState({ hotproducts: res.data });
     });
@@ -77,7 +77,7 @@ class HomeComponent extends Component {
       >
         <div style={styles.imageBox}>
           <img
-            src={"http://localhost:3001/uploads/"+item.images[0]}
+            src={"/uploads/"+item.images[0]} // 🔥 FIX
             alt=""
             style={styles.image}
           />
@@ -119,7 +119,7 @@ class HomeComponent extends Component {
               onClick={()=>window.location="/product/"+current._id}
             >
               <img
-                src={"http://localhost:3001/uploads/"+current.images[0]}
+                src={"/uploads/"+current.images[0]} // 🔥 FIX
                 alt=""
                 style={styles.sliderImage}
               />
@@ -237,7 +237,7 @@ class HomeComponent extends Component {
             /* 🔥 CHỈ SỬA CHỖ NÀY */
             .cinema-text1 {
               position: absolute;
-              top: 50%; /* DỜI XUỐNG */
+              top: 50%;
               left: 50%;
               transform: translate(-50%, -50%);
               color: white;
@@ -247,7 +247,7 @@ class HomeComponent extends Component {
             }
             .cinema-text2 {
               position: absolute;
-              top: 50%; /* DỜI XUỐNG */
+              top: 50%;
               left: 90%;
               transform: translate(-50%, -50%);
               color: white;
@@ -257,7 +257,7 @@ class HomeComponent extends Component {
             }
             .cinema-text3 {
               position: absolute;
-              top: 25%; /* DỜI XUỐNG */
+              top: 25%;
               left: 80%;
               transform: translate(-50%, -50%);
               color: white;
@@ -267,7 +267,7 @@ class HomeComponent extends Component {
             }
             .cinema-text4 {
               position: absolute;
-              top: 30%; /* DỜI XUỐNG */
+              top: 30%;
               left: 15%;
               transform: translate(-50%, -50%);
               color: white;
@@ -277,7 +277,7 @@ class HomeComponent extends Component {
             }
             .cinema-text5 {
               position: absolute;
-              top: 80%; /* DỜI XUỐNG */
+              top: 80%;
               left: 50%;
               transform: translate(-50%, -50%);
               color: white;

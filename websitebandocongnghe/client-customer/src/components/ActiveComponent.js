@@ -13,7 +13,6 @@ class ActiveComponent extends Component {
     };
   }
 
-  // ✅ AUTO ACTIVE FROM EMAIL LINK
   componentDidMount() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
@@ -48,7 +47,7 @@ class ActiveComponent extends Component {
       token: this.state.txtToken
     };
 
-    axios.post("http://localhost:3001/api/customer/active", account)
+    axios.post("/api/customer/active", account)   // 🔥 FIX DUY NHẤT
 
       .then((res) => {
         if (res.data && res.data.success === true) {
@@ -134,14 +133,11 @@ class ActiveComponent extends Component {
         </div>
 
       </div>
-      
-      
     );
   }
 }
 
 const styles = {
-
   page: {
     height: "100vh",
     display: "flex",

@@ -130,7 +130,7 @@ class Product extends Component {
           {item.images?.length > 0 ? (
             <img
               style={this.styles.img}
-              src={`http://localhost:3001/uploads/${item.images[0]}`}
+              src={`/uploads/${item.images[0]}`}   // 🔥 FIX DUY NHẤT
               alt=""
             />
           ) : (

@@ -28,7 +28,7 @@ class Mycart extends Component {
 
       const img =
         p.images && p.images.length > 0
-          ? "http://localhost:3001/uploads/" + p.images[0]
+          ? "/uploads/" + p.images[0]   // 🔥 FIX
           : "";
 
       const category =
@@ -293,7 +293,7 @@ class Mycart extends Component {
       }
     };
 
-    axios.post('http://localhost:3001/api/customer/checkout', body, config)
+    axios.post('/api/customer/checkout', body, config)   // 🔥 FIX
       .then(res => {
 
         if (res.data.success) {
@@ -310,8 +310,6 @@ class Mycart extends Component {
       });
   }
 }
-
-// ... GIỮ NGUYÊN TOÀN BỘ CODE PHÍA TRÊN
 
 const styles = {
 
@@ -335,29 +333,9 @@ const styles = {
 
   amount:{ fontWeight:"700", color:"#e53935" },
 
-  /* 🔥 REMOVE BUTTON (SHOPEE STYLE) */
-  removeBtn:{ 
-    background:"#ff4d4d", 
-    border:"none", 
-    color:"white", 
-    padding:"8px 14px", 
-    borderRadius:"8px", 
-    cursor:"pointer",
-    transition:"0.2s"
-  },
+  removeBtn:{ background:"#ff4d4d", border:"none", color:"white", padding:"8px 14px", borderRadius:"8px", cursor:"pointer", transition:"0.2s" },
 
-  /* 🔥 CHECKOUT = SAME SIZE */
-  checkoutBtn:{ 
-    background:"linear-gradient(135deg,#4CAF50,#2e7d32)", 
-    color:"white", 
-    padding:"8px 14px",     // giống remove
-    border:"none", 
-    borderRadius:"8px",     // giống remove
-    cursor:"pointer",
-    fontSize:"14px",
-    fontWeight:"500",
-    transition:"0.2s"
-  },
+  checkoutBtn:{ background:"linear-gradient(135deg,#4CAF50,#2e7d32)", color:"white", padding:"8px 14px", border:"none", borderRadius:"8px", cursor:"pointer", fontSize:"14px", fontWeight:"500", transition:"0.2s" },
 
   disabledBtn:{ background:"#ccc", cursor:"not-allowed" },
 

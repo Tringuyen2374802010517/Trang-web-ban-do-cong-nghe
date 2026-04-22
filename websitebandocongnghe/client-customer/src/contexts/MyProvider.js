@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MyContext from './MyContext';
-import axios from 'axios'; // 🔥 THÊM
+import axios from 'axios';
 
 class MyProvider extends Component {
 
@@ -21,16 +21,17 @@ class MyProvider extends Component {
 
   componentDidMount() {
 
-    // 🔥 SET BASE URL
-    axios.defaults.baseURL = 'http://localhost:3001';
+    // 🔥 FIX DEPLOY (KHÔNG DÙNG LOCALHOST)
+    axios.defaults.baseURL = '';
 
-    // 🔥 INTERCEPTOR (QUAN TRỌNG NHẤT)
+    // 🔥 INTERCEPTOR
     axios.interceptors.request.use(config => {
 
       const token = localStorage.getItem("token");
 
       if (token) {
-        config.headers['x-access-token'] = token; // 🔥 MATCH BACKEND
+        // 🔥 CHUẨN JWT
+        config.headers['Authorization'] = 'Bearer ' + token;
       }
 
       return config;

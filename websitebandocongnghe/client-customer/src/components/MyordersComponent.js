@@ -70,7 +70,7 @@ class Myorders extends Component {
 
         const img =
           p.images && p.images.length > 0
-            ? "http://localhost:3001/uploads/" + p.images[0]
+            ? "/uploads/" + p.images[0]   // 🔥 FIX
             : "";
 
         return (
@@ -124,7 +124,6 @@ class Myorders extends Component {
 
             <div style={styles.infoBox}>
 
-              {/* DELIVERY TYPE */}
               <p>
                 <b>Delivery method:</b>{" "}
                 {selectedOrder.deliveryType === "delivery"
@@ -132,21 +131,18 @@ class Myorders extends Component {
                   : "Store pickup"}
               </p>
 
-              {/* ADDRESS */}
               {selectedOrder.deliveryType === "delivery" && selectedOrder.address && (
                 <p>
                   <b>Address:</b> {selectedOrder.address}
                 </p>
               )}
 
-              {/* STORE */}
               {selectedOrder.deliveryType === "store" && selectedOrder.selectedStore && (
                 <p>
                   <b>Pickup at store:</b> {selectedOrder.selectedStore}
                 </p>
               )}
 
-              {/* PAYMENT */}
               <p>
                 <b>Payment method:</b>{" "}
                 {selectedOrder.paymentMethod === "cod"
@@ -156,7 +152,6 @@ class Myorders extends Component {
                   : ""}
               </p>
 
-              {/* NOTE */}
               {selectedOrder.note && (
                 <p>
                   <b>Note:</b> {selectedOrder.note}
@@ -201,7 +196,7 @@ class Myorders extends Component {
       }
     };
 
-    axios.get('http://localhost:3001/api/customer/orders/customer/' + cid, config)
+    axios.get('/api/customer/orders/customer/' + cid, config)   // 🔥 FIX
       .then(res => {
         this.setState({
           orders: res.data,

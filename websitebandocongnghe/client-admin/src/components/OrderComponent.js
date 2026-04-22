@@ -17,9 +17,8 @@ class Order extends Component {
     this.apiGetOrders();
   }
 
-  // ================= FIX TOKEN =================
   apiGetOrders() {
-    const token = localStorage.getItem('admin_token'); // 🔥 FIX
+    const token = localStorage.getItem('admin_token');
 
     if (!token) {
       console.log("No token");
@@ -36,7 +35,7 @@ class Order extends Component {
   }
 
   apiPutOrderStatus(id, status) {
-    const token = localStorage.getItem('admin_token'); // 🔥 FIX
+    const token = localStorage.getItem('admin_token');
 
     axios.put(
       '/api/admin/orders/status/' + id,
@@ -49,7 +48,6 @@ class Order extends Component {
     this.setState({ order: item });
   }
 
-  // ================= STYLE =================
   styles = {
     container: {
       padding: '30px',
@@ -57,7 +55,6 @@ class Order extends Component {
       minHeight: '100vh',
       color: '#fff'
     },
-
     card: {
       background: 'rgba(255,255,255,0.08)',
       backdropFilter: 'blur(10px)',
@@ -65,22 +62,18 @@ class Order extends Component {
       padding: '20px',
       marginBottom: '20px'
     },
-
     table: {
       width: '100%',
       borderCollapse: 'collapse'
     },
-
     th: {
       padding: '10px',
       background: 'rgba(255,255,255,0.1)'
     },
-
     td: {
       padding: '10px',
       borderTop: '1px solid rgba(255,255,255,0.1)'
     },
-
     badge: (status) => ({
       padding: '4px 10px',
       borderRadius: '10px',
@@ -92,12 +85,10 @@ class Order extends Component {
           ? '#00c853'
           : '#d50000'
     }),
-
     action: {
       cursor: 'pointer',
       marginRight: '10px'
     },
-
     img: {
       width: '60px',
       height: '60px',
@@ -111,7 +102,6 @@ class Order extends Component {
     return (
       <div style={this.styles.container}>
 
-        {/* ORDER LIST */}
         <div style={this.styles.card}>
           <h2>Orders</h2>
 
@@ -179,13 +169,11 @@ class Order extends Component {
           </table>
         </div>
 
-        {/* ORDER DETAIL */}
         {order && (
           <div style={this.styles.card}>
             <h2>Order Detail</h2>
 
             <div style={{ marginBottom: '15px' }}>
-
               <p>
                 <b>Hình thức:</b>{" "}
                 {order.deliveryType === "delivery"
@@ -217,7 +205,6 @@ class Order extends Component {
                   <b>Ghi chú:</b> {order.note}
                 </p>
               )}
-
             </div>
 
             <table style={this.styles.table}>
@@ -241,7 +228,7 @@ class Order extends Component {
                         style={this.styles.img}
                         src={
                           item.product?.images?.length > 0
-                            ? "http://localhost:3001/uploads/" + item.product.images[0]
+                            ? "/uploads/" + item.product.images[0]
                             : ""
                         }
                         alt=""

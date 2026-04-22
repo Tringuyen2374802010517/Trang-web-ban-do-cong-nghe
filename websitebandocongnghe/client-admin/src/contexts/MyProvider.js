@@ -9,13 +9,12 @@ class MyProvider extends Component {
   };
 
   componentDidMount() {
-    axios.defaults.baseURL = 'http://localhost:3001';
+    axios.defaults.baseURL = '';   // 🔥 FIX DUY NHẤT
 
     axios.interceptors.request.use(config => {
       const token = localStorage.getItem('admin_token');
 
       if (token) {
-        // 🔥 FIX CHUẨN
         config.headers['Authorization'] = 'Bearer ' + token;
       }
 
