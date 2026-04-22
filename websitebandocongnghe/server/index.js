@@ -3,7 +3,9 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = 3001;
+
+// 🔥 FIX PORT CHO REPLIT
+const PORT = process.env.PORT || 3001;
 
 // ================= MIDDLEWARE =================
 app.use(cors());
@@ -13,16 +15,30 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // ================= STATIC UPLOADS =================
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ================= TEST API =================
+// ================= API =================
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello from server!' });
 });
 
-// ================= ADMIN API =================
 app.use('/api/admin', require('./api/admin'));
-
-// ================= CUSTOMER API =================
 app.use('/api/customer', require('./api/customer'));
+
+// ================= SERVE FRONTEND =================
+
+// 🔥 ADMIN BUILD
+app.use('/admin', express.static(path.join(__dirname, '../client-admin/build')));
+
+// 🔥 CUSTOMER BUILD
+app.use('/', express.static(path.join(__dirname, '../client-customer/build')));
+
+// 🔥 FIX REACT ROUTER (IMPORTANT)
+app.get('/admin/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client-admin/build/index.html'));
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client-customer/build/index.html'));
+});
 
 // ================= START SERVER =================
 app.listen(PORT, () => {
