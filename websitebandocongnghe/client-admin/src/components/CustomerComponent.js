@@ -237,7 +237,9 @@ class Customer extends Component {
                     <td style={this.styles.td}>{new Date(item.cdate).toLocaleString()}</td>
                     <td style={this.styles.td}>{item.customer?.name}</td>
                     <td style={this.styles.td}>{item.customer?.phone}</td>
-                    <td style={this.styles.td}>{item.total}</td>
+                    <td style={this.styles.td}>
+                      {item.total?.toLocaleString('vi-VN')}₫
+                    </td>
                     <td style={this.styles.td}>{item.status}</td>
                   </tr>
                 ))}
@@ -285,9 +287,13 @@ class Customer extends Component {
                       />
                     </td>
 
-                    <td style={this.styles.td}>{item.product?.price}</td>
+                    <td style={this.styles.td}>
+                      {item.product?.price?.toLocaleString('vi-VN')}₫
+                    </td>
                     <td style={this.styles.td}>{item.quantity}</td>
-                    <td style={this.styles.td}>{item.product?.price * item.quantity}</td>
+                    <td style={this.styles.td}>
+                      {(item.product?.price * item.quantity)?.toLocaleString('vi-VN')}₫
+                    </td>
                   </tr>
                 ))}
               </tbody>

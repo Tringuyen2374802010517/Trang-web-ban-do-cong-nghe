@@ -114,7 +114,11 @@ class Product extends Component {
         }}
       >
         <td style={this.styles.td}>{item.name}</td>
-        <td style={this.styles.td}>{item.price}</td>
+
+        {/* 🔥 FIX PRICE */}
+        <td style={this.styles.td}>
+          {item.price?.toLocaleString('vi-VN')}₫
+        </td>
 
         <td style={this.styles.td}>
           <span style={this.styles.badge(item.show)}>
@@ -130,7 +134,7 @@ class Product extends Component {
           {item.images?.length > 0 ? (
             <img
               style={this.styles.img}
-              src={`/uploads/${item.images[0]}`}   // 🔥 FIX DUY NHẤT
+              src={`/uploads/${item.images[0]}`}
               alt=""
             />
           ) : (

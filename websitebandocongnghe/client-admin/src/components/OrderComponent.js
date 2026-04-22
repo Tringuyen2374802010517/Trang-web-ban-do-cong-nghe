@@ -125,7 +125,11 @@ class Order extends Component {
                   </td>
                   <td style={this.styles.td}>{item.customer?.name}</td>
                   <td style={this.styles.td}>{item.customer?.phone}</td>
-                  <td style={this.styles.td}>{item.total}</td>
+
+                  {/* 🔥 FIX TOTAL */}
+                  <td style={this.styles.td}>
+                    {item.total?.toLocaleString('vi-VN')}₫
+                  </td>
 
                   <td style={this.styles.td}>
                     <span style={this.styles.badge(item.status)}>
@@ -235,10 +239,16 @@ class Order extends Component {
                       />
                     </td>
 
-                    <td style={this.styles.td}>{item.product?.price}</td>
-                    <td style={this.styles.td}>{item.quantity}</td>
+                    {/* 🔥 FIX PRICE */}
                     <td style={this.styles.td}>
-                      {item.product?.price * item.quantity}
+                      {item.product?.price?.toLocaleString('vi-VN')}₫
+                    </td>
+
+                    <td style={this.styles.td}>{item.quantity}</td>
+
+                    {/* 🔥 FIX AMOUNT */}
+                    <td style={this.styles.td}>
+                      {(item.product?.price * item.quantity)?.toLocaleString('vi-VN')}₫
                     </td>
                   </tr>
                 ))}

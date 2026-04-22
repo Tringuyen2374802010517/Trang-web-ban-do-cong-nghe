@@ -14,12 +14,12 @@ class HomeComponent extends Component {
   }
 
   componentDidMount(){
-    axios.get("/api/customer/products/new") // 🔥 FIX
+    axios.get("/api/customer/products/new") 
     .then(res => {
       this.setState({ newproducts: res.data });
     });
 
-    axios.get("/api/customer/products/hot") // 🔥 FIX
+    axios.get("/api/customer/products/hot") 
     .then(res => {
       this.setState({ hotproducts: res.data });
     });
@@ -77,7 +77,7 @@ class HomeComponent extends Component {
       >
         <div style={styles.imageBox}>
           <img
-            src={"/uploads/"+item.images[0]} // 🔥 FIX
+            src={"/uploads/"+item.images[0]}
             alt=""
             style={styles.image}
           />
@@ -119,7 +119,7 @@ class HomeComponent extends Component {
               onClick={()=>window.location="/product/"+current._id}
             >
               <img
-                src={"/uploads/"+current.images[0]} // 🔥 FIX
+                src={"/uploads/"+current.images[0]} 
                 alt=""
                 style={styles.sliderImage}
               />
@@ -135,7 +135,7 @@ class HomeComponent extends Component {
           {hotproducts.map(item => this.renderProduct(item))}
         </div>
 
-        {/* 🔥 GALLERY BACKGROUND ĐEN (BAO TOÀN BỘ) */}
+        {/*GALLERY BACKGROUND ĐEN*/}
         <div style={{ background: "#000" }}>
           {/* Video1 */}
           <div className="cinema" style={styles.fullSection}>
@@ -316,7 +316,7 @@ const styles = {
   container:{ width:"100%", background:"#f5f5f7" },
   title:{ textAlign:"center", margin:"40px 0", fontSize:"28px", fontWeight:"600" },
   banner:{ width:"100%" },
-  bannerImage:{ width:"100%", height:"350px", objectFit:"cover", borderRadius:"20px" },
+  bannerImage:{ width:"100%", height:"365px", objectFit:"cover", borderRadius:"20px" },
   slider:{ height:"460px", background:"#fff", display:"flex", flexDirection:"column", alignItems:"center", paddingTop:"10px" },
   sliderHeader:{ fontSize:"30px", fontWeight:"bold", marginBottom:"20px" },
   sliderContent:{ textAlign:"center", transition:"1s" },
