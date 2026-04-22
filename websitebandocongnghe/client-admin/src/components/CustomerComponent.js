@@ -33,12 +33,12 @@ class Customer extends Component {
 
   // ================= API =================
   apiGetCustomers = () => {
-    const token = localStorage.getItem('admin_token'); // 🔥 FIX
+    const token = localStorage.getItem('admin_token');
 
     if (!token) return;
 
     axios.get('/api/admin/customers', {
-      headers: { 'x-access-token': token }
+      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
     })
     .then(res => {
       this.setState({ customers: res.data });
@@ -47,10 +47,10 @@ class Customer extends Component {
   };
 
   apiGetOrdersByCustID = (cid) => {
-    const token = localStorage.getItem('admin_token'); // 🔥 FIX
+    const token = localStorage.getItem('admin_token');
 
     axios.get('/api/admin/orders/customer/' + cid, {
-      headers: { 'x-access-token': token }
+      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
     })
     .then(res => {
       this.setState({ orders: res.data });
@@ -59,21 +59,23 @@ class Customer extends Component {
   };
 
   apiPutCustomerDeactive = (id) => {
-    const token = localStorage.getItem('admin_token'); // 🔥 FIX
+    const token = localStorage.getItem('admin_token');
 
     axios.put('/api/admin/customers/deactive/' + id, {}, {
-      headers: { 'x-access-token': token }
+      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
     })
-    .then(() => this.apiGetCustomers());
+    .then(() => this.apiGetCustomers())
+    .catch(err => console.error(err)); // thêm để debug
   };
 
   apiSendMail = (id) => {
-    const token = localStorage.getItem('admin_token'); // 🔥 FIX
+    const token = localStorage.getItem('admin_token');
 
     axios.get('/api/admin/customers/sendmail/' + id, {
-      headers: { 'x-access-token': token }
+      headers: { Authorization: 'Bearer ' + token } // ✅ FIX
     })
-    .then(res => alert(res.data.message));
+    .then(res => alert(res.data.message))
+    .catch(err => console.error(err));
   };
 
   // ================= EVENT =================
