@@ -1,14 +1,12 @@
-require('dotenv').config();
-
 module.exports = {
-  DB_SERVER: process.env.DB_SERVER,
-  DB_USER: process.env.DB_USER,
-  DB_PASS: process.env.DB_PASS,
-  DB_DATABASE: process.env.DB_DATABASE,
+  DB_SERVER: "banhang.9h3limq.mongodb.net",
+  DB_USER: "tringuyen21012005_db_user",
+  DB_PASS: "trihoccongnghethongtin",
+  DB_DATABASE: "shoppingonline",
 
-  EMAIL_USER: process.env.EMAIL_USER,
-  EMAIL_PASS: process.env.EMAIL_PASS,
+  EMAIL_USER: "techdevices2026@gmail.com",
+  EMAIL_PASS: "fsasqbuezikmtikl",
 
-  JWT_SECRET: process.env.JWT_SECRET,
-  JWT_EXPIRES: process.env.JWT_EXPIRES
+  JWT_SECRET: "minhtri_jwt_secret",
+  JWT_EXPIRES: "1d"
 };
