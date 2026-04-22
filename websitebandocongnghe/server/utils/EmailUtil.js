@@ -1,6 +1,10 @@
 const nodemailer = require('nodemailer');
 const MyConstants = require('./MyConstants');
 
+// 🔥 BASE URL (deploy)
+const BASE_URL = "https://trang-web-ban-do-cong-nghe--tringuyen210120.replit.app";
+
+// ================= TRANSPORT =================
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -11,12 +15,12 @@ const transporter = nodemailer.createTransport({
 
 module.exports = {
 
-  // ================= EMAIL KÍCH HOẠT (GIỮ NGUYÊN) =================
+  // ================= SIGNUP ACTIVATION EMAIL =================
   async send(email, id, token) {
 
     try {
 
-      const link = `http://localhost:3000/active?id=${id}&token=${token}`;
+      const link = `${BASE_URL}/active?id=${id}&token=${token}`;
 
       const text =
         `Thanks for signing up.\n\n` +
@@ -46,28 +50,28 @@ module.exports = {
     }
   },
 
-  // 🔥 THÊM MỚI: EMAIL BỊ KHÓA
+  // ================= ACCOUNT DEACTIVATED EMAIL =================
   async sendDeactive(email, name, id, token) {
 
     try {
 
-      const link = `http://localhost:3000/active?id=${id}&token=${token}`;
+      const link = `${BASE_URL}/active?id=${id}&token=${token}`;
 
       const text =
-        `Xin chào ${name},\n\n` +
-        `Tài khoản của bạn đã bị vô hiệu hóa bởi admin.\n\n` +
-        `Vui lòng kích hoạt lại tài khoản để tiếp tục sử dụng hệ thống.\n\n` +
-        `Click link để kích hoạt:\n${link}\n\n` +
-        `Trân trọng.`;
+        `Hello ${name},\n\n` +
+        `Your account has been deactivated by the administrator.\n\n` +
+        `Please reactivate your account to continue using the system.\n\n` +
+        `Click the link below to activate your account:\n${link}\n\n` +
+        `Best regards.`;
 
       const info = await transporter.sendMail({
         from: MyConstants.EMAIL_USER,
         to: email,
-        subject: 'Tài khoản bị vô hiệu hóa',
+        subject: 'Account Deactivated',
         text
       });
 
-      console.log("EMAIL DEACTIVE SENT:", info.response);
+      console.log("EMAIL DEACTIVATED SENT:", info.response);
       return true;
 
     } catch (err) {
