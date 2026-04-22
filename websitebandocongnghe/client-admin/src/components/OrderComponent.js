@@ -175,34 +175,34 @@ class Order extends Component {
 
             <div style={{ marginBottom: '15px' }}>
               <p>
-                <b>Hình thức:</b>{" "}
+                <b>Delivery method:</b>{" "}
                 {order.deliveryType === "delivery"
-                  ? "Giao tận nơi"
-                  : "Nhận tại cửa hàng"}
+                  ? "Home delivery"
+                  : "Store pickup"}
               </p>
 
               {order.deliveryType === "delivery" && order.address && (
                 <p>
-                  <b>Địa chỉ:</b> {order.address}
+                  <b>Address:</b> {order.address}
                 </p>
               )}
 
               {order.deliveryType === "store" && order.selectedStore && (
                 <p>
-                  <b>Cửa hàng nhận:</b> {order.selectedStore}
+                  <b>Pickup at store:</b> {order.selectedStore}
                 </p>
               )}
 
               <p>
-                <b>Thanh toán:</b>{" "}
+                <b>Payment method:</b>{" "}
                 {order.paymentMethod === "cod"
-                  ? "Tiền mặt"
-                  : "Chuyển khoản"}
+                  ? "Cash"
+                  : "Bank transfer"}
               </p>
 
               {order.note && (
                 <p>
-                  <b>Ghi chú:</b> {order.note}
+                  <b>Note:</b> {order.note}
                 </p>
               )}
             </div>

@@ -29,9 +29,9 @@ const CustomerDAO = {
     try {
       console.log("ACTIVE INPUT:", _id, token);
 
+      // 🔥 FIX DUY NHẤT Ở ĐÂY (BỎ token)
       const query = {
-        _id: new mongoose.Types.ObjectId(_id),
-        token: token
+        _id: new mongoose.Types.ObjectId(_id)
       };
 
       const update = {
