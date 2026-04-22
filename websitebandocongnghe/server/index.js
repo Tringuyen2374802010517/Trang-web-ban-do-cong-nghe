@@ -4,6 +4,7 @@ const path = require('path');
 
 const app = express();
 
+// 🔥 FIX PORT CHO REPLIT
 const PORT = process.env.PORT || 3001;
 
 // ================= MIDDLEWARE =================
@@ -24,18 +25,17 @@ app.use('/api/customer', require('./api/customer'));
 
 // ================= SERVE FRONTEND =================
 
-// 🔥 ADMIN (đặt trước)
+// 🔥 ADMIN BUILD
 app.use('/admin', express.static(path.join(__dirname, '../client-admin/build')));
 
-// 🔥 ADMIN ROUTE
+// 🔥 CUSTOMER BUILD
+app.use('/', express.static(path.join(__dirname, '../client-customer/build')));
+
+// 🔥 FIX REACT ROUTER (IMPORTANT)
 app.get('/admin/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client-admin/build/index.html'));
 });
 
-// 🔥 CUSTOMER (đặt sau)
-app.use(express.static(path.join(__dirname, '../client-customer/build')));
-
-// 🔥 CUSTOMER ROUTE
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client-customer/build/index.html'));
 });
