@@ -15,7 +15,8 @@ class MyProfileComponent extends Component {
       txtPassword: "",
       txtName: "",
       txtPhone: "",
-      txtEmail: ""
+      txtEmail: "",
+      errors: {} // 🔥 THÊM
     };
   }
 
@@ -33,6 +34,49 @@ class MyProfileComponent extends Component {
       });
     }
   }
+
+  // 🔥 VALIDATE GIỐNG SIGNUP
+  validateField = (name, value) => {
+    let errors = { ...this.state.errors };
+
+    switch (name) {
+      case "txtName":
+        value.length < 8
+          ? errors.name = "The name must be at least 8 characters long"
+          : delete errors.name;
+        break;
+
+      case "txtPassword":
+        value.length < 6 || !/[A-Za-z]/.test(value) || !/[0-9]/.test(value)
+          ? errors.password = "The password must be at least 6 characters long and include both letters and numbers."
+          : delete errors.password;
+        break;
+
+      case "txtPhone":
+        !/^[0-9]{10}$/.test(value)
+          ? errors.phone = "The phone number must be exactly 10 digits."
+          : delete errors.phone;
+        break;
+
+      case "txtEmail":
+        !/^\S+@\S+\.\S+$/.test(value)
+          ? errors.email = "Email is invalid"
+          : delete errors.email;
+        break;
+    }
+
+    this.setState({ errors });
+  };
+
+  handleInputChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
+    this.validateField(name, value);
+  };
+
+  isFormValid = () => {
+    return Object.keys(this.state.errors).length === 0;
+  };
 
   render(){
     return(
@@ -58,46 +102,70 @@ class MyProfileComponent extends Component {
             <label>Password</label>
             <input
               type="password"
+              name="txtPassword"
               value={this.state.txtPassword}
-              onChange={(e)=>this.setState({txtPassword:e.target.value})}
-              style={styles.input}
+              onChange={this.handleInputChange}
+              style={{
+                ...styles.input,
+                border: this.state.errors.password ? "1px solid red" : "1px solid #ccc"
+              }}
             />
+            {this.state.errors.password && <div style={styles.error}>{this.state.errors.password}</div>}
           </div>
 
           {/* Name */}
           <div style={styles.group}>
             <label>Name</label>
             <input
+              name="txtName"
               value={this.state.txtName}
-              onChange={(e)=>this.setState({txtName:e.target.value})}
-              style={styles.input}
+              onChange={this.handleInputChange}
+              style={{
+                ...styles.input,
+                border: this.state.errors.name ? "1px solid red" : "1px solid #ccc"
+              }}
             />
+            {this.state.errors.name && <div style={styles.error}>{this.state.errors.name}</div>}
           </div>
 
           {/* Phone */}
           <div style={styles.group}>
             <label>Phone</label>
             <input
+              name="txtPhone"
               value={this.state.txtPhone}
-              onChange={(e)=>this.setState({txtPhone:e.target.value})}
-              style={styles.input}
+              onChange={this.handleInputChange}
+              style={{
+                ...styles.input,
+                border: this.state.errors.phone ? "1px solid red" : "1px solid #ccc"
+              }}
             />
+            {this.state.errors.phone && <div style={styles.error}>{this.state.errors.phone}</div>}
           </div>
 
           {/* Email */}
           <div style={styles.group}>
             <label>Email</label>
             <input
+              name="txtEmail"
               value={this.state.txtEmail}
-              onChange={(e)=>this.setState({txtEmail:e.target.value})}
-              style={styles.input}
+              onChange={this.handleInputChange}
+              style={{
+                ...styles.input,
+                border: this.state.errors.email ? "1px solid red" : "1px solid #ccc"
+              }}
             />
+            {this.state.errors.email && <div style={styles.error}>{this.state.errors.email}</div>}
           </div>
 
           {/* Button */}
           <button
             onClick={()=>this.btnUpdateClick()}
-            style={styles.button}
+            disabled={!this.isFormValid()} // 🔥 disable nếu sai
+            style={{
+              ...styles.button,
+              opacity: !this.isFormValid() ? 0.6 : 1
+            }}
             onMouseEnter={e=>e.target.style.background="#1976d2"}
             onMouseLeave={e=>e.target.style.background="#2196f3"}
           >
@@ -113,6 +181,11 @@ class MyProfileComponent extends Component {
   // ================= UPDATE =================
   btnUpdateClick(){
 
+    if(!this.isFormValid()){
+      alert("Please enter correct information!");
+      return;
+    }
+
     const token = this.context.token || localStorage.getItem("token");
 
     if(!token){
@@ -120,7 +193,6 @@ class MyProfileComponent extends Component {
       return;
     }
 
-    // 🔥 FIX TOKEN HEADER (QUAN TRỌNG NHẤT)
     const config = {
       headers: {
         Authorization: "Bearer " + token
@@ -156,7 +228,6 @@ class MyProfileComponent extends Component {
           txtEmail: result.email
         });
 
-        // 🔥 update context + localStorage
         this.context.setCustomer(result);
         localStorage.setItem("customer", JSON.stringify(result));
       }
@@ -178,8 +249,8 @@ const styles = {
   height: "100vh",
   display: "flex",
   justifyContent: "center",
-  alignItems: "flex-start",   // 🔥 giống login
-  paddingTop: "120px",        // 🔥 đẩy xuống giữa
+  alignItems: "flex-start",
+  paddingTop: "120px",
   background: "#f5f6fa",
   fontFamily: "Arial, sans-serif"
   },
@@ -217,6 +288,12 @@ const styles = {
     borderRadius:"8px",
     border:"1px solid #ddd",
     background:"#eee"
+  },
+
+  error: {
+    color:"red",
+    fontSize:"13px",
+    marginTop:"4px"
   },
 
   button: {

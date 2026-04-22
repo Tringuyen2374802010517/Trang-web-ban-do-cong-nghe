@@ -123,7 +123,7 @@ class ProductDetailComponent extends Component {
               onMouseEnter={e=>e.target.style.background="#d32f2f"}
               onMouseLeave={e=>e.target.style.background="#ff4d4d"}
             >
-              🛒 ADD TO CART
+              ADD TO CART
             </button>
 
           </div>
@@ -228,7 +228,7 @@ class ProductDetailComponent extends Component {
                 }}
               >
                 <img
-                  src={"/uploads/"+item.images[0]}   // 🔥 FIX
+                  src={"/uploads/"+item.images[0]} 
                   alt=""
                   style={styles.relatedImg}
                 />
@@ -280,7 +280,7 @@ class ProductDetailComponent extends Component {
 
       this.context.setMycart(mycart);
 
-      alert("🛒 Product added!");
+      alert("Product added!");
 
     }else{
       alert("Enter quantity");
@@ -369,7 +369,7 @@ const styles = {
   button: {
     marginTop:"20px",
     padding:"8px 16px",
-    background:"#ff4d4d",
+    background:"#E54646",
     border:"none",
     color:"#fff",
     borderRadius:"6px",

@@ -28,7 +28,7 @@ class ProductComponent extends Component {
     const keyword = this.props.router.params.keyword;
 
     if(cid){
-      axios.get("/api/customer/products/category/"+cid)   // 🔥 FIX
+      axios.get("/api/customer/products/category/"+cid)   
       .then(res=>{
         this.setState({
           products: res.data,
@@ -38,7 +38,7 @@ class ProductComponent extends Component {
     }
 
     if(keyword){
-      axios.get("/api/customer/products/search/"+keyword) // 🔥 FIX
+      axios.get("/api/customer/products/search/"+keyword) 
       .then(res=>{
         this.setState({
           products: res.data,
@@ -87,7 +87,7 @@ class ProductComponent extends Component {
       >
         <div style={styles.imageBox}>
           <img
-            src={"/uploads/"+item.images[0]}   // 🔥 FIX
+            src={"/uploads/"+item.images[0]}   
             alt=""
             style={styles.image}
           />
