@@ -1,5 +1,3 @@
-// FULL FILE (giữ nguyên logic, chỉ đổi style)
-
 import axios from "axios";
 import React, { Component } from "react";
 import { withRouter } from "../utils/withRouter";
@@ -38,8 +36,8 @@ class SignupComponent extends Component {
         break;
 
       case "txtPhone":
-        !/^[0-9]{9}$/.test(value)
-          ? errors.phone = "The phone number must be exactly 9 digits."
+        !/^[0-9]{10}$/.test(value)   // 🔥 CHỈ SỬA DÒNG NÀY
+          ? errors.phone = "The phone number must be exactly 10 digits."  // 🔥 sửa message
           : delete errors.phone;
         break;
 
@@ -162,7 +160,7 @@ class SignupComponent extends Component {
             {this.renderInput("Username","txtUsername","text","Enter username...","username")}
             {this.renderInput("Password","txtPassword","password","At least 6 chars","password")}
             {this.renderInput("Name","txtName","text","Minimum 8 characters","name")}
-            {this.renderInput("Phone","txtPhone","text","9 digits only","phone")}
+            {this.renderInput("Phone","txtPhone","text","10 digits only","phone")} {/* 🔥 sửa placeholder */}
             {this.renderInput("Email","txtEmail","text","example@gmail.com","email")}
 
             <button
@@ -209,7 +207,6 @@ class SignupComponent extends Component {
 }
 
 const styles = {
-
   page:{
     height:"100vh",
     display:"flex",
@@ -219,7 +216,6 @@ const styles = {
     background:"#f5f7fa",
     fontFamily:"Poppins, sans-serif"
   },
-
   card:{
     width:"420px",
     background:"#ffffff",
@@ -228,18 +224,15 @@ const styles = {
     color:"#000",
     boxShadow:"0 10px 30px rgba(0,0,0,0.1)"
   },
-
   title:{
     textAlign:"center",
     marginBottom:"20px"
   },
-
   group:{
     marginBottom:"15px",
     display:"flex",
     flexDirection:"column"
   },
-
   input:{
     marginTop:"5px",
     padding:"12px",
@@ -249,18 +242,15 @@ const styles = {
     color:"#000",
     border:"1px solid #ddd"
   },
-
   error:{
     color:"#ff3b30",
     fontSize:"13px",
     marginTop:"4px"
   },
-
   required:{
     color:"#ff3b30",
     marginLeft:"4px"
   },
-
   button:{
     width:"100%",
     padding:"12px",
@@ -270,13 +260,11 @@ const styles = {
     color:"#fff",
     cursor:"pointer"
   },
-
   link:{
     color:"#007aff",
     fontWeight:"bold",
     cursor:"pointer"
   },
-
   activeLink:{
     marginTop:"10px",
     color:"#007aff",
@@ -284,7 +272,6 @@ const styles = {
     cursor:"pointer",
     textDecoration:"underline"
   }
-
 };
 
 export default withRouter(SignupComponent);
