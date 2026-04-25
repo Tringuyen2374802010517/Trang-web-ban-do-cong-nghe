@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const MyConstants = require('./MyConstants');
 
-// 🔥 BASE URL (deploy)
+// BASE URL (deploy)
 const BASE_URL = "https://trang-web-ban-do-cong-nghe--tri237480201051.replit.app";
 
 // ================= TRANSPORT =================

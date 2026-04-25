@@ -30,7 +30,7 @@ class MainComponent extends Component {
         <MenuComponent/>
         <InformComponent/>
 
-        {/* 🔥 FIX: đẩy toàn bộ content xuống */}
+        {}
         <div style={{ marginTop: "120px" }}>
 
           {/* MAIN CONTENT */}

@@ -21,7 +21,7 @@ class ProductDetailComponent extends Component {
     this.apiGetRelatedProducts();
   }
 
-  // ✅ FIX: click sản phẩm khác vẫn load lại
+
   componentDidUpdate(prevProps){
     const prevID = prevProps.router.params.id;
     const currentID = this.props.router.params.id;
@@ -37,7 +37,7 @@ class ProductDetailComponent extends Component {
     const id = this.props.router.params.id;
 
     axios
-    .get("/api/customer/products/"+id)   // 🔥 FIX
+    .get("/api/customer/products/"+id)   
     .then(res=>{
       this.setState({product: res.data})
     });
@@ -45,7 +45,7 @@ class ProductDetailComponent extends Component {
 
   apiGetRelatedProducts(){
     axios
-      .get("/api/customer/products")   // 🔥 FIX (bị sai http:///)
+      .get("/api/customer/products")  
       .then(res=>{
         const all = res.data;
 

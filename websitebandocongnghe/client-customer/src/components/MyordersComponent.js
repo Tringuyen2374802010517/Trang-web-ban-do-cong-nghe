@@ -70,7 +70,7 @@ class Myorders extends Component {
 
         const img =
           p.images && p.images.length > 0
-            ? "/uploads/" + p.images[0]   // 🔥 FIX
+            ? "/uploads/" + p.images[0] 
             : "";
 
         return (
@@ -196,7 +196,7 @@ class Myorders extends Component {
       }
     };
 
-    axios.get('/api/customer/orders/customer/' + cid, config)   // 🔥 FIX
+    axios.get('/api/customer/orders/customer/' + cid, config)  
       .then(res => {
         this.setState({
           orders: res.data,

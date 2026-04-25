@@ -239,14 +239,14 @@ class Order extends Component {
                       />
                     </td>
 
-                    {/* 🔥 FIX PRICE */}
+                    {/* PRICE */}
                     <td style={this.styles.td}>
                       {item.product?.price?.toLocaleString('vi-VN')}₫
                     </td>
 
                     <td style={this.styles.td}>{item.quantity}</td>
 
-                    {/* 🔥 FIX AMOUNT */}
+                    {/*AMOUNT */}
                     <td style={this.styles.td}>
                       {(item.product?.price * item.quantity)?.toLocaleString('vi-VN')}₫
                     </td>

@@ -11,7 +11,7 @@ class InformComponent extends Component {
     return(
 
       <div style={{
-        position:"sticky", // 🔥 CHỈ SỬA DÒNG NÀY
+        position:"sticky", 
         top:"60px",
         width:"100%",
         background:"#426EB4",

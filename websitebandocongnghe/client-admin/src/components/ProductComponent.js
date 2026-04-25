@@ -115,7 +115,7 @@ class Product extends Component {
       >
         <td style={this.styles.td}>{item.name}</td>
 
-        {/* 🔥 FIX PRICE */}
+        {}
         <td style={this.styles.td}>
           {item.price?.toLocaleString('vi-VN')}₫
         </td>

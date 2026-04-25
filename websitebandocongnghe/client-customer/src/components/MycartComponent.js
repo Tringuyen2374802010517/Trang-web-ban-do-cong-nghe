@@ -28,7 +28,7 @@ class Mycart extends Component {
 
       const img =
         p.images && p.images.length > 0
-          ? "/uploads/" + p.images[0]   // 🔥 FIX
+          ? "/uploads/" + p.images[0]   
           : "";
 
       const category =
@@ -293,7 +293,7 @@ class Mycart extends Component {
       }
     };
 
-    axios.post('/api/customer/checkout', body, config)   // 🔥 FIX
+    axios.post('/api/customer/checkout', body, config) 
       .then(res => {
 
         if (res.data.success) {

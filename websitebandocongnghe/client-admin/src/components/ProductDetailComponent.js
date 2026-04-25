@@ -50,7 +50,7 @@ class ProductDetail extends Component {
         fileImage: null,
 
         imagePreview: p.images?.[0]
-          ? `/uploads/${p.images[0]}`   // 🔥 FIX DUY NHẤT
+          ? `/uploads/${p.images[0]}`  
           : null,
 
         txtBattery: p.battery || '',

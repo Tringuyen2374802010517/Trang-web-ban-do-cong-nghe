@@ -16,7 +16,7 @@ class MyProfileComponent extends Component {
       txtName: "",
       txtPhone: "",
       txtEmail: "",
-      errors: {} // 🔥 THÊM
+      errors: {} 
     };
   }
 
@@ -35,7 +35,7 @@ class MyProfileComponent extends Component {
     }
   }
 
-  // 🔥 VALIDATE GIỐNG SIGNUP
+  // VALIDATE 
   validateField = (name, value) => {
     let errors = { ...this.state.errors };
 
@@ -161,7 +161,7 @@ class MyProfileComponent extends Component {
           {/* Button */}
           <button
             onClick={()=>this.btnUpdateClick()}
-            disabled={!this.isFormValid()} // 🔥 disable nếu sai
+            disabled={!this.isFormValid()} 
             style={{
               ...styles.button,
               opacity: !this.isFormValid() ? 0.6 : 1

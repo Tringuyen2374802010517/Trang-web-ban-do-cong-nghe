@@ -48,7 +48,7 @@ class Home extends Component {
 
     return (
       <div style={styles.container}>
-        {/* Animation */}
+        {}
         <style>
           {`
             @keyframes fadeIn {

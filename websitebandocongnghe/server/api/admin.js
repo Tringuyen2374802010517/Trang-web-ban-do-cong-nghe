@@ -1,4 +1,4 @@
-console.log("🔥 ADMIN API LOADED");
+console.log(" ADMIN API LOADED");
 const express = require('express');
 const router = express.Router();
 
@@ -10,7 +10,6 @@ const CategoryDAO = require('../models/CategoryDAO');
 const ProductDAO = require('../models/ProductDAO');
 const OrderDAO = require('../models/OrderDAO');
 
-// 🔥 THÊM
 const CustomerDAO = require('../models/CustomerDAO');
 const EmailUtil = require('../utils/EmailUtil');
 
@@ -225,7 +224,6 @@ router.put('/customers/deactive/:id', JwtUtil.checkToken, async (req, res) => {
 });
 
 
-// 🔥 SỬA DUY NHẤT Ở ĐÂY
 router.get('/customers/sendmail/:id', JwtUtil.checkToken, async (req, res) => {
   try {
     const cust = await CustomerDAO.selectByID(req.params.id);
@@ -234,7 +232,7 @@ router.get('/customers/sendmail/:id', JwtUtil.checkToken, async (req, res) => {
       return res.json({ success: false, message: 'Not found' });
     }
 
-    // 🔥 DÙNG HÀM MỚI (EMAIL BỊ KHÓA)
+    // Email
     const send = await EmailUtil.sendDeactive(
       cust.email,
       cust.name,

@@ -143,7 +143,7 @@ router.post('/active', async (req, res) => {
 });
 
 
-// ================= LOGIN (🔥 ĐÃ FIX CHUẨN) =================
+// ================= LOGIN =================
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -152,10 +152,10 @@ router.post('/login', async (req, res) => {
       return res.json({ success: false, message: "Missing data" });
     }
 
-    // 🔥 TÌM USER TRƯỚC
+    // TÌM USER TRƯỚC
     const customer = await CustomerDAO.selectByUsername(username);
 
-    // ❌ KHÔNG TỒN TẠI
+    // KHÔNG TỒN TẠI
     if (!customer) {
       return res.json({
         success: false,
@@ -163,7 +163,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // ❌ SAI PASSWORD
+    // SAI PASSWORD
     if (customer.password !== password) {
       return res.json({
         success: false,
@@ -171,7 +171,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // ❌ CHƯA ACTIVE
+    // CHƯA ACTIVE
     if (customer.active !== 1) {
       return res.json({
         success: false,
@@ -179,7 +179,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // ✅ OK
+    //Ổn
     const token = JwtUtil.genToken({ _id: customer._id });
 
     res.json({

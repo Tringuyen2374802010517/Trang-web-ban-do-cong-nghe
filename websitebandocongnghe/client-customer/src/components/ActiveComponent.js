@@ -47,7 +47,7 @@ class ActiveComponent extends Component {
       token: this.state.txtToken
     };
 
-    axios.post("/api/customer/active", account)   // 🔥 FIX DUY NHẤT
+    axios.post("/api/customer/active", account) 
 
       .then((res) => {
         if (res.data && res.data.success === true) {

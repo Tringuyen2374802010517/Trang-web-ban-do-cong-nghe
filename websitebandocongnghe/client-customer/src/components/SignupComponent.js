@@ -90,7 +90,7 @@ class SignupComponent extends Component {
       email: this.state.txtEmail
     };
 
-    axios.post("/api/customer/signup", account)   // 🔥 FIX
+    axios.post("/api/customer/signup", account)  
       .then((res) => {
 
         const msg = res.data.message || "";

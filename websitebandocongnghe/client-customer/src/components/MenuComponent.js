@@ -13,7 +13,7 @@ class MenuComponent extends Component {
   }
 
   componentDidMount(){
-    axios.get("/api/customer/categories")   // 🔥 FIX DUY NHẤT
+    axios.get("/api/customer/categories")  
     .then(res=>{
       this.setState({categories: res.data})
     })

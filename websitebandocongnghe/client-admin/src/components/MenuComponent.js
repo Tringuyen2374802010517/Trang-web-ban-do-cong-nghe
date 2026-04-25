@@ -96,7 +96,7 @@ class Menu extends Component {
     return (
       <div style={styles.container}>
         <div>
-          {/* TOGGLE BUTTON */}
+          {}
           <div style={styles.toggleBtn} onClick={this.toggleMenu}>
             ☰
           </div>
@@ -168,7 +168,7 @@ class Menu extends Component {
           </ul>
         </div>
 
-        {/* USER */}
+        {}
         <div style={styles.userBox}>
           {!collapsed && (
             <div>

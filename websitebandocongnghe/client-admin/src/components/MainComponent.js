@@ -43,12 +43,12 @@ class Main extends Component {
 
     return (
       <div style={styles.container}>
-        {/* SIDEBAR */}
+        {}
         <div style={styles.sidebar}>
           <Menu />
         </div>
 
-        {/* CONTENT */}
+        {}
         <div style={styles.content}>
           <Routes>
             <Route path="home" element={<Home />} />
